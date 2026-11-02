@@ -1,0 +1,877 @@
+/* ==========================================================================
+   Sahm Trading Copilot - Ultra-Professional Institutional Dark Glassmorphism
+   Full RTL Arabic Design System for Saudi (TASI) & US (SPX Options) Markets
+   ========================================================================== */
+
+:root {
+  --copilot-bg-base: #060910;
+  --copilot-bg-primary: rgba(10, 15, 26, 0.88);
+  --copilot-bg-card: rgba(17, 24, 39, 0.75);
+  --copilot-bg-card-hover: rgba(30, 41, 59, 0.85);
+  --copilot-bg-glass: rgba(255, 255, 255, 0.035);
+  --copilot-border: rgba(255, 255, 255, 0.08);
+  --copilot-border-hover: rgba(56, 189, 248, 0.35);
+  --copilot-border-glow: rgba(0, 240, 144, 0.25);
+
+  --copilot-text-primary: #f8fafc;
+  --copilot-text-secondary: #94a3b8;
+  --copilot-text-muted: #64748b;
+
+  --copilot-bullish: #00F090;
+  --copilot-bullish-glow: rgba(0, 240, 144, 0.28);
+  --copilot-bearish: #FF3B56;
+  --copilot-bearish-glow: rgba(255, 59, 86, 0.28);
+  --copilot-warning: #f59e0b;
+  --copilot-warning-glow: rgba(245, 158, 11, 0.28);
+  --copilot-cyan: #38bdf8;
+  --copilot-purple: #a855f7;
+  --copilot-indigo: #6366f1;
+
+  --copilot-font: 'Cairo', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --copilot-radius-xs: 4px;
+  --copilot-radius-sm: 6px;
+  --copilot-radius-md: 10px;
+  --copilot-radius-lg: 14px;
+  --copilot-radius-xl: 18px;
+
+  --copilot-glass-blur: blur(20px) saturate(180%);
+  --copilot-shadow-deep: 0 20px 48px -6px rgba(0, 0, 0, 0.75), 0 0 1px 1px rgba(255, 255, 255, 0.08);
+}
+
+/* Injected Container Reset */
+#sahm-copilot-root {
+  position: fixed;
+  top: 70px;
+  left: 20px;
+  z-index: 2147483640;
+  font-family: var(--copilot-font);
+  direction: rtl;
+  text-align: right;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+#sahm-copilot-root * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
+}
+
+/* Floating Master Glass Panel */
+.copilot-panel {
+  width: 440px;
+  max-height: calc(100vh - 85px);
+  background: var(--copilot-bg-primary);
+  border: 1px solid var(--copilot-border);
+  border-radius: var(--copilot-radius-lg);
+  box-shadow: var(--copilot-shadow-deep);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  backdrop-filter: var(--copilot-glass-blur);
+  -webkit-backdrop-filter: var(--copilot-glass-blur);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.copilot-panel.collapsed {
+  display: none;
+}
+
+/* Top Drag Handle Header */
+.copilot-header {
+  background: linear-gradient(180deg, rgba(22, 32, 50, 0.95) 0%, rgba(13, 20, 36, 0.90) 100%);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--copilot-border);
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.copilot-header:active {
+  cursor: grabbing;
+}
+
+.copilot-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.copilot-logo-badge {
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #00F090 0%, #06b6d4 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: #050b14;
+  box-shadow: 0 0 14px var(--copilot-bullish-glow);
+}
+
+.copilot-app-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--copilot-text-primary);
+  letter-spacing: -0.2px;
+}
+
+.copilot-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: var(--copilot-text-secondary);
+  background: rgba(0, 0, 0, 0.35);
+  padding: 2px 7px;
+  border-radius: 12px;
+  border: 1px solid var(--copilot-border);
+}
+
+.copilot-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #64748b;
+}
+
+.copilot-dot.connected {
+  background: var(--copilot-bullish);
+  box-shadow: 0 0 8px var(--copilot-bullish);
+  animation: copilot-pulse 2s infinite;
+}
+
+.copilot-dot.disconnected {
+  background: var(--copilot-bearish);
+  box-shadow: 0 0 8px var(--copilot-bearish);
+}
+
+@keyframes copilot-pulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.copilot-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.copilot-btn-icon {
+  background: transparent;
+  border: none;
+  color: var(--copilot-text-muted);
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: var(--copilot-radius-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.copilot-btn-icon:hover {
+  color: var(--copilot-text-primary);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Institutional Market Switcher Bar */
+.copilot-market-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #090e18;
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--copilot-border);
+}
+
+.copilot-market-switch-group {
+  display: flex;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--copilot-border);
+  border-radius: 8px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.copilot-market-btn {
+  background: transparent;
+  border: none;
+  color: var(--copilot-text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.copilot-market-btn:hover {
+  color: var(--copilot-text-primary);
+}
+
+.copilot-market-btn.active {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
+}
+
+.copilot-market-btn.active.sa-active {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.35);
+}
+
+.copilot-session-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.session-open {
+  background: rgba(0, 240, 144, 0.12);
+  color: #00F090;
+  border: 1px solid rgba(0, 240, 144, 0.25);
+}
+
+.session-closed {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  animation: glow-amber 1.8s infinite alternate;
+}
+
+@keyframes glow-amber {
+  from { border-color: rgba(245, 158, 11, 0.3); }
+  to { border-color: rgba(245, 158, 11, 0.7); box-shadow: 0 0 8px rgba(245, 158, 11, 0.3); }
+}
+
+/* Strategy Selector Bar */
+.copilot-strategy-bar {
+  background: #0d1422;
+  border-bottom: 1px solid var(--copilot-border);
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.copilot-strategy-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.copilot-strategy-mode-toggle {
+  display: flex;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 2px;
+  border-radius: 6px;
+  border: 1px solid var(--copilot-border);
+}
+
+.copilot-mode-btn {
+  background: transparent;
+  border: none;
+  color: var(--copilot-text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.copilot-mode-btn.active {
+  background: #1e293b;
+  color: #38bdf8;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+
+.copilot-strategy-pill-list {
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.copilot-strategy-pill-list::-webkit-scrollbar {
+  height: 3px;
+}
+.copilot-strategy-pill-list::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 3px;
+}
+
+.copilot-strat-pill {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--copilot-border);
+  color: var(--copilot-text-secondary);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.copilot-strat-pill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--copilot-text-primary);
+}
+
+.copilot-strat-pill.active {
+  background: rgba(56, 189, 248, 0.18);
+  color: #38bdf8;
+  border-color: #38bdf8;
+  font-weight: 700;
+}
+
+/* Navigation Tabs */
+.copilot-nav {
+  display: flex;
+  background: #0b101c;
+  border-bottom: 1px solid var(--copilot-border);
+  padding: 0 4px;
+  overflow-x: auto;
+}
+
+.copilot-nav::-webkit-scrollbar {
+  height: 2px;
+}
+
+.copilot-tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--copilot-text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 9px 6px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.copilot-tab-btn:hover {
+  color: var(--copilot-text-primary);
+}
+
+.copilot-tab-btn.active {
+  color: #38bdf8;
+  border-bottom-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.06);
+  font-weight: 700;
+}
+
+.copilot-tab-btn.highlight-pulse {
+  color: #f59e0b;
+  border-bottom-color: #f59e0b;
+  animation: tab-pulse 1.8s infinite;
+}
+
+@keyframes tab-pulse {
+  0% { background: rgba(245, 158, 11, 0.05); }
+  50% { background: rgba(245, 158, 11, 0.18); }
+  100% { background: rgba(245, 158, 11, 0.05); }
+}
+
+/* Diagnostic Status Bar */
+.copilot-diag-bar {
+  background: rgba(11, 16, 28, 0.95);
+  border-bottom: 1px solid var(--copilot-border);
+  padding: 5px 12px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--copilot-text-secondary);
+}
+
+.copilot-diag-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+  color: #38bdf8;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Scrollable Content Body */
+.copilot-body {
+  padding: 12px;
+  overflow-y: auto;
+  max-height: calc(100vh - 230px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.copilot-body::-webkit-scrollbar {
+  width: 5px;
+}
+.copilot-body::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+
+/* Market Status Banners */
+.copilot-market-banner {
+  padding: 10px 12px;
+  border-radius: var(--copilot-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid transparent;
+}
+
+.copilot-market-banner.bullish {
+  background: linear-gradient(90deg, rgba(0, 240, 144, 0.12) 0%, rgba(0, 240, 144, 0.03) 100%);
+  border-color: rgba(0, 240, 144, 0.3);
+  color: var(--copilot-bullish);
+}
+
+.copilot-market-banner.bearish {
+  background: linear-gradient(90deg, rgba(255, 59, 86, 0.12) 0%, rgba(255, 59, 86, 0.03) 100%);
+  border-color: rgba(255, 59, 86, 0.3);
+  color: var(--copilot-bearish);
+}
+
+.copilot-market-banner.sideways-warning {
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0.12) 0%, rgba(56, 189, 248, 0.03) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #e0f2fe;
+}
+
+.copilot-market-banner.crisis-defense {
+  background: linear-gradient(90deg, rgba(239, 68, 68, 0.18) 0%, rgba(185, 28, 28, 0.08) 100%);
+  border: 1px solid #ef4444;
+  color: #fee2e2;
+  box-shadow: 0 0 14px rgba(239, 68, 68, 0.2);
+}
+
+.banner-detail {
+  font-size: 11px;
+  color: var(--copilot-text-secondary);
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+/* Modular Glass Cards */
+.copilot-card {
+  background: var(--copilot-bg-card);
+  border: 1px solid var(--copilot-border);
+  border-radius: var(--copilot-radius-md);
+  padding: 11px 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  backdrop-filter: blur(12px);
+}
+
+.copilot-card-title {
+  font-size: 11px;
+  color: var(--copilot-text-muted);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Order Flow Liquidity Bar */
+.copilot-liquidity-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 700;
+}
+.copilot-liquidity-labels .buy-val { color: var(--copilot-bullish); }
+.copilot-liquidity-labels .sell-val { color: var(--copilot-bearish); }
+
+.copilot-liquidity-bar {
+  height: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+}
+
+.copilot-bar-buy {
+  background: linear-gradient(90deg, #00d27f 0%, #00F090 100%);
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.copilot-bar-sell {
+  background: linear-gradient(90deg, #FF3B56 0%, #e11d48 100%);
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+/* Level Grid */
+.copilot-levels-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 7px 6px;
+  border-radius: 6px;
+  text-align: center;
+  border: 1px solid var(--copilot-border);
+}
+
+.copilot-level-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.copilot-level-label {
+  font-size: 9px;
+  color: var(--copilot-text-muted);
+  font-weight: 600;
+}
+
+.copilot-level-val {
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.val-entry { color: #38bdf8; }
+.val-tp { color: var(--copilot-bullish); }
+.val-sl { color: var(--copilot-bearish); }
+.val-rr { color: var(--copilot-warning); }
+
+/* Next-Session AI Predictor Card */
+.copilot-pred-card {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.8) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: var(--copilot-radius-md);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.copilot-pred-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.copilot-pred-badge {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 6px;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+}
+
+/* 4D Stock Analyzer Grid */
+.copilot-4d-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.copilot-4d-box {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--copilot-border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.copilot-4d-box-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--copilot-text-muted);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* News Sentiment Item */
+.copilot-news-item {
+  font-size: 11px;
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  border-right: 3px solid #64748b;
+  line-height: 1.4;
+  color: var(--copilot-text-secondary);
+}
+
+.copilot-news-item.bullish {
+  border-right-color: var(--copilot-bullish);
+}
+
+.copilot-news-item.bearish {
+  border-right-color: var(--copilot-bearish);
+}
+
+/* Quantitative SPX Options Recommendation Card */
+.copilot-opt-card {
+  background: var(--copilot-bg-card);
+  border: 1px solid var(--copilot-border);
+  border-radius: var(--copilot-radius-md);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.copilot-opt-card.call {
+  border-right: 4px solid var(--copilot-bullish);
+  background: linear-gradient(135deg, rgba(0, 240, 144, 0.04) 0%, rgba(17, 24, 39, 0.8) 100%);
+}
+
+.copilot-opt-card.put {
+  border-right: 4px solid var(--copilot-bearish);
+  background: linear-gradient(135deg, rgba(255, 59, 86, 0.04) 0%, rgba(17, 24, 39, 0.8) 100%);
+}
+
+/* Portfolio Positions */
+.copilot-portfolio-item {
+  background: var(--copilot-bg-card);
+  border: 1px solid var(--copilot-border);
+  border-radius: var(--copilot-radius-md);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.copilot-action-badge {
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-weight: 800;
+  font-size: 11px;
+}
+
+.badge-hold {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.badge-trim {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--copilot-warning);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-exit {
+  background: rgba(255, 59, 86, 0.15);
+  color: var(--copilot-bearish);
+  border: 1px solid rgba(255, 59, 86, 0.3);
+  animation: copilot-pulse 1.8s infinite;
+}
+
+/* Floating Trigger Bubble */
+.copilot-bubble-trigger {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  border: 2px solid var(--copilot-bullish);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px var(--copilot-bullish-glow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.copilot-bubble-trigger:hover {
+  transform: scale(1.08);
+}
+
+.copilot-bubble-trigger.hidden {
+  display: none;
+}
+
+/* Footer */
+.copilot-footer {
+  padding: 8px 12px;
+  background: #090e18;
+  border-top: 1px solid var(--copilot-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.copilot-btn-inspect {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  border: 1px solid #38bdf8;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+  transition: all 0.2s;
+}
+
+.copilot-btn-inspect:hover {
+  background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.45);
+}
+
+/* Execution Tracking & Locked-In Entry Styles */
+.copilot-btn-track-trade {
+  width: 100%;
+  margin-top: 8px;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.copilot-btn-track-trade:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: #38bdf8;
+  color: #f8fafc;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+}
+
+.copilot-btn-track-trade.tracked {
+  background: linear-gradient(135deg, rgba(0, 240, 144, 0.18) 0%, rgba(6, 182, 212, 0.18) 100%);
+  border: 1px solid #00F090;
+  color: #00F090;
+  box-shadow: 0 0 14px rgba(0, 240, 144, 0.35);
+}
+
+.copilot-btn-track-trade.tracked:hover {
+  background: rgba(255, 59, 86, 0.15);
+  border-color: #FF3B56;
+  color: #FF3B56;
+  box-shadow: 0 0 12px rgba(255, 59, 86, 0.3);
+}
+
+/* Locked-in Entry Comparison Container */
+.copilot-locked-comparison {
+  margin-top: 8px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(0, 240, 144, 0.3);
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.copilot-locked-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.copilot-locked-label {
+  font-size: 9px;
+  color: #94a3b8;
+  font-weight: 700;
+}
+
+.copilot-locked-val {
+  font-size: 13px;
+  font-weight: 900;
+  color: #f8fafc;
+}
+
+/* Visual Proximity Alert Banners */
+.copilot-proximity-alert {
+  margin-bottom: 10px;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: pulse-border 1.5s infinite;
+}
+
+.copilot-proximity-alert.warning {
+  background: rgba(239, 68, 68, 0.18);
+  border: 1px solid #ef4444;
+  color: #fca5a5;
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.3);
+}
+
+.copilot-proximity-alert.target {
+  background: rgba(0, 240, 144, 0.18);
+  border: 1px solid #00F090;
+  color: #00F090;
+  box-shadow: 0 0 16px rgba(0, 240, 144, 0.3);
+}
+
+/* Overnight Scouting Mode Banner */
+.copilot-overnight-banner {
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.18) 0%, rgba(14, 165, 233, 0.12) 100%);
+  border: 1px solid rgba(129, 140, 248, 0.35);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.copilot-overnight-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 800;
+  color: #c7d2fe;
+}
+
+.copilot-overnight-notice {
+  font-size: 10px;
+  color: #94a3b8;
+  line-height: 1.45;
+}
+
+@keyframes pulse-border {
+  0% { box-shadow: 0 0 4px rgba(239, 68, 68, 0.3); }
+  50% { box-shadow: 0 0 16px rgba(239, 68, 68, 0.7); }
+  100% { box-shadow: 0 0 4px rgba(239, 68, 68, 0.3); }
+}
+

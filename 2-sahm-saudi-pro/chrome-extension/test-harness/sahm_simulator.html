@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منصة سهم للتداول - السوق السعودي (تاسي ونمو) | Sahm Saudi Pro Simulator</title>
+  <link rel="stylesheet" href="../content/sidebar.css">
+  <style>
+    :root {
+      --sahm-dark: #070d18;
+      --sahm-surface: #0f1a2e;
+      --sahm-surface-border: #1e2e4a;
+      --sahm-emerald: #00F090;
+      --sahm-gold: #fbbf24;
+      --sahm-red: #FF3B56;
+      --sahm-blue: #38bdf8;
+      --sahm-text: #f8fafc;
+      --sahm-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Tajawal', 'Cairo', 'Segoe UI', system-ui, sans-serif;
+    }
+
+    body {
+      background-color: var(--sahm-dark);
+      color: var(--sahm-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navbar */
+    .sahm-nav {
+      background: #0a1324;
+      border-bottom: 1px solid var(--sahm-surface-border);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sahm-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sahm-logo-badge {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #00F090 0%, #059669 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      font-weight: 900;
+      font-size: 16px;
+    }
+
+    .sahm-logo-text {
+      font-size: 18px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #00F090 0%, #fbbf24 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-tab-btn {
+      background: var(--sahm-surface);
+      border: 1px solid var(--sahm-surface-border);
+      color: var(--sahm-muted);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+
+    .nav-tab-btn:hover {
+      color: var(--sahm-text);
+      border-color: var(--sahm-emerald);
+    }
+
+    .nav-tab-btn.active {
+      background: rgba(0, 240, 144, 0.15);
+      border-color: var(--sahm-emerald);
+      color: var(--sahm-emerald);
+    }
+
+    /* Major Indices Ticker Bar */
+    .indices-ticker-bar {
+      background: #060b14;
+      border-bottom: 1px solid var(--sahm-surface-border);
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 12px;
+    }
+
+    .ticker-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .market-status-bar {
+      margin-right: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-badge {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 4px;
+      background: rgba(0, 240, 144, 0.15);
+      color: #00F090;
+      font-weight: 800;
+    }
+
+    .sim-btn {
+      background: #152238;
+      border: 1px solid #23385d;
+      color: #cbd5e1;
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    .sim-btn:hover {
+      border-color: var(--sahm-emerald);
+      color: #fff;
+    }
+
+    /* Simulation Control Bar */
+    .sim-banner {
+      background: linear-gradient(90deg, rgba(16,185,129,0.12) 0%, rgba(245,158,11,0.08) 100%);
+      border-bottom: 1px solid rgba(16,185,129,0.2);
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+
+    .sahm-container {
+      padding: 20px 24px;
+      flex: 1;
+      max-width: 1300px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .view-section {
+      display: none;
+    }
+    .view-section.active {
+      display: block;
+    }
+
+    /* Verified Sahm Data Table */
+    .market-table, .n-data-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--sahm-surface);
+      border: 1px solid var(--sahm-surface-border);
+      border-radius: 10px;
+      overflow: hidden;
+      font-size: 12px;
+    }
+
+    thead th {
+      background: #0a1324;
+      color: var(--sahm-muted);
+      padding: 10px 14px;
+      font-weight: 700;
+      text-align: right;
+      border-bottom: 1px solid var(--sahm-surface-border);
+    }
+
+    tbody td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--sahm-text);
+    }
+
+    tbody tr:hover {
+      background: rgba(0, 240, 144, 0.04);
+      cursor: pointer;
+    }
+
+    .text-green { color: var(--sahm-emerald) !important; font-weight: 700; }
+    .text-red { color: var(--sahm-red) !important; font-weight: 700; }
+
+    /* Single Stock Detail Layout */
+    .stock-detail-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .stock-header-card {
+      background: var(--sahm-surface);
+      border: 1px solid var(--sahm-surface-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .depth-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .depth-box, .ts-box {
+      background: var(--sahm-surface);
+      border: 1px solid var(--sahm-surface-border);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .ts-box {
+      max-height: 480px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation & Branding -->
+  <nav class="sahm-nav">
+    <div class="sahm-brand">
+      <div class="sahm-logo-badge">س</div>
+      <div>
+        <div class="sahm-logo-text">منصة سهم | السوق السعودي (Tadawul)</div>
+      </div>
+    </div>
+
+    <div class="nav-tabs">
+      <button class="nav-tab-btn active" data-view="view-market">قائمة أسهم تاسي ونمو (.market-table)</button>
+      <button class="nav-tab-btn" data-view="view-stock">عمق السهم وكاشف الهوامير (Order Book Depth)</button>
+    </div>
+
+    <div class="market-bar-market-info" style="display:flex; align-items:center; gap:8px;">
+      <span class="status-badge" id="sim-status-badge">سوق مفتوح 🟢</span>
+    </div>
+  </nav>
+
+  <!-- Major Indices Ticker Bar -->
+  <div class="indices-ticker-bar ticker-bar">
+    <div class="ticker-item market-index-item">
+      <span style="color:var(--sahm-muted); font-weight:700;">المؤشر العام (تاسي):</span>
+      <span class="index-value" style="color:#ef4444; font-weight:800;">10,173.03</span>
+      <span class="index-change" style="color:#ef4444; font-weight:800; font-size:11px;">(-16.74 / -0.16%)</span>
+    </div>
+    <div class="ticker-item market-index-item">
+      <span style="color:var(--sahm-muted); font-weight:700;">نمو حد أعلى:</span>
+      <span class="index-value" style="color:#00F090; font-weight:800;">22,202.28</span>
+      <span class="index-change" style="color:#00F090; font-weight:800; font-size:11px;">(+15.82 / +0.07%)</span>
+    </div>
+    <div class="ticker-item">
+      <span style="color:var(--sahm-muted); font-weight:700;">قيمة التداول:</span>
+      <span style="color:#38bdf8; font-weight:800;">2.35 مليار ر.س</span>
+    </div>
+
+    <div class="market-status-bar">
+      <button id="sim-toggle-market-status" class="sim-btn">🔄 تبديل حالة الجلسة (مفتوح / مزاد الإغلاق / مغلق)</button>
+    </div>
+  </div>
+
+  <!-- Simulation Control Banner -->
+  <div class="sim-banner">
+    <div>
+      🇸🇦 <b>محاكي السوق السعودي المعتمد</b>: يدعم قراءة أعمدة منصة سهم الرسمية بـ <code>data-col-key</code> وتكامل الرادار الرباعي.
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button id="sim-btn-pump" class="sim-btn">🔥 محاكاة سيولة شراء وهوامير (Pump)</button>
+      <button id="sim-btn-dump" class="sim-btn">⚠️ محاكاة جني أرباح وتصريف (Dump)</button>
+    </div>
+  </div>
+
+  <main class="sahm-container">
+
+    <!-- VIEW 1: SAUDI MARKET TABLE WITH VERIFIED DATA-COL-KEYS -->
+    <section id="view-market" class="view-section active">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+        <h2 style="font-size: 16px; font-weight: 800;">جدول مراقبة السوق السعودي (أسهم تاسي ونمو)</h2>
+        <span style="font-size: 11px; color: var(--sahm-muted);">https://app.sahmcapital.com/sa/market</span>
+      </div>
+
+      <!-- Verified Sahm Data Table with exact data-col-keys -->
+      <table class="market-table n-data-table" id="market-overview-table">
+        <thead>
+          <tr>
+            <th data-col-key="mergeNoCodeSymbol">الرمز / اسم الشركة</th>
+            <th data-col-key="lastPrice">السعر الحالي</th>
+            <th data-col-key="highAndLowLimited">التغير %</th>
+            <th data-col-key="highAndLow">التغير (ر.س)</th>
+            <th data-col-key="trades">الصفقات</th>
+            <th data-col-key="volume">الحجم</th>
+            <th data-col-key="bidPrice">أفضل طلب</th>
+            <th data-col-key="askPrice">أفضل عرض</th>
+            <th data-col-key="highPrice">الأعلى</th>
+            <th data-col-key="lowPrice">الأدنى</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 1120 مصرف الراجحي -->
+          <tr data-symbol="1120" class="selectable-stock-row">
+            <td data-col-key="mergeNoCodeSymbol">
+              <span class="code" style="font-weight:900; color:#fff;">1120</span>
+              <span class="name" style="color:var(--sahm-muted); margin-right:6px;">مصرف الراجحي</span>
+            </td>
+            <td data-col-key="lastPrice" class="text-green">87.50</td>
+            <td data-col-key="highAndLowLimited" class="text-green">+1.65%</td>
+            <td data-col-key="highAndLow" class="text-green">+1.40</td>
+            <td data-col-key="trades">4,210</td>
+            <td data-col-key="volume">4.85M</td>
+            <td data-col-key="bidPrice">87.40</td>
+            <td data-col-key="bidVol" style="display:none;">18500</td>
+            <td data-col-key="askPrice">87.50</td>
+            <td data-col-key="askVol" style="display:none;">9200</td>
+            <td data-col-key="openPrice" style="display:none;">86.50</td>
+            <td data-col-key="highPrice">88.20</td>
+            <td data-col-key="lowPrice">86.40</td>
+            <td data-col-key="turnover" style="display:none;">424.3M</td>
+          </tr>
+
+          <!-- 9551 برج المعرفة (نمو) -->
+          <tr data-symbol="9551" class="selectable-stock-row">
+            <td data-col-key="mergeNoCodeSymbol">
+              <span class="code" style="font-weight:900; color:#fbbf24;">9551</span>
+              <span class="name" style="color:var(--sahm-muted); margin-right:6px;">برج المعرفة</span>
+            </td>
+            <td data-col-key="lastPrice" class="text-green">11.28</td>
+            <td data-col-key="highAndLowLimited" class="text-green">+25.33%</td>
+            <td data-col-key="highAndLow" class="text-green">+2.28</td>
+            <td data-col-key="trades">128</td>
+            <td data-col-key="volume">29.05K</td>
+            <td data-col-key="bidPrice">11.26</td>
+            <td data-col-key="bidVol" style="display:none;">54000</td>
+            <td data-col-key="askPrice">11.28</td>
+            <td data-col-key="askVol" style="display:none;">12000</td>
+            <td data-col-key="openPrice" style="display:none;">9.20</td>
+            <td data-col-key="highPrice">11.28</td>
+            <td data-col-key="lowPrice">9.15</td>
+            <td data-col-key="turnover" style="display:none;">327K</td>
+          </tr>
+
+          <!-- 2222 أرامكو السعودية -->
+          <tr data-symbol="2222" class="selectable-stock-row">
+            <td data-col-key="mergeNoCodeSymbol">
+              <span class="code" style="font-weight:900; color:#fff;">2222</span>
+              <span class="name" style="color:var(--sahm-muted); margin-right:6px;">أرامكو السعودية</span>
+            </td>
+            <td data-col-key="lastPrice" class="text-red">27.80</td>
+            <td data-col-key="highAndLowLimited" class="text-red">-0.71%</td>
+            <td data-col-key="highAndLow" class="text-red">-0.20</td>
+            <td data-col-key="trades">8,950</td>
+            <td data-col-key="volume">12.40M</td>
+            <td data-col-key="bidPrice">27.75</td>
+            <td data-col-key="bidVol" style="display:none;">45000</td>
+            <td data-col-key="askPrice">27.80</td>
+            <td data-col-key="askVol" style="display:none;">78000</td>
+            <td data-col-key="openPrice" style="display:none;">28.00</td>
+            <td data-col-key="highPrice">28.05</td>
+            <td data-col-key="lowPrice">27.70</td>
+            <td data-col-key="turnover" style="display:none;">344.7M</td>
+          </tr>
+
+          <!-- 7010 إس تي سي -->
+          <tr data-symbol="7010" class="selectable-stock-row">
+            <td data-col-key="mergeNoCodeSymbol">
+              <span class="code" style="font-weight:900; color:#fff;">7010</span>
+              <span class="name" style="color:var(--sahm-muted); margin-right:6px;">stc الاتصالات السعودية</span>
+            </td>
+            <td data-col-key="lastPrice" class="text-green">40.85</td>
+            <td data-col-key="highAndLowLimited" class="text-green">+0.25%</td>
+            <td data-col-key="highAndLow" class="text-green">+0.10</td>
+            <td data-col-key="trades">2,340</td>
+            <td data-col-key="volume">1.92M</td>
+            <td data-col-key="bidPrice">40.80</td>
+            <td data-col-key="bidVol" style="display:none;">22000</td>
+            <td data-col-key="askPrice">40.85</td>
+            <td data-col-key="askVol" style="display:none;">18000</td>
+            <td data-col-key="openPrice" style="display:none;">40.75</td>
+            <td data-col-key="highPrice">41.00</td>
+            <td data-col-key="lowPrice">40.65</td>
+            <td data-col-key="turnover" style="display:none;">78.4M</td>
+          </tr>
+
+          <!-- 9587 لانا الطبية (نمو) -->
+          <tr data-symbol="9587" class="selectable-stock-row">
+            <td data-col-key="mergeNoCodeSymbol">
+              <span class="code" style="font-weight:900; color:#fbbf24;">9587</span>
+              <span class="name" style="color:var(--sahm-muted); margin-right:6px;">لانا الطبية</span>
+            </td>
+            <td data-col-key="lastPrice" class="text-green">31.40</td>
+            <td data-col-key="highAndLowLimited" class="text-green">+4.67%</td>
+            <td data-col-key="highAndLow" class="text-green">+1.40</td>
+            <td data-col-key="trades">840</td>
+            <td data-col-key="volume">1.85M</td>
+            <td data-col-key="bidPrice">31.35</td>
+            <td data-col-key="bidVol" style="display:none;">32000</td>
+            <td data-col-key="askPrice">31.40</td>
+            <td data-col-key="askVol" style="display:none;">14000</td>
+            <td data-col-key="openPrice" style="display:none;">30.00</td>
+            <td data-col-key="highPrice">31.80</td>
+            <td data-col-key="lowPrice">29.90</td>
+            <td data-col-key="turnover" style="display:none;">58.1M</td>
+          </tr>
+
+          <!-- 2010 سابك -->
+          <tr data-symbol="2010" class="selectable-stock-row">
+            <td data-col-key="mergeNoCodeSymbol">
+              <span class="code" style="font-weight:900; color:#fff;">2010</span>
+              <span class="name" style="color:var(--sahm-muted); margin-right:6px;">سابك</span>
+            </td>
+            <td data-col-key="lastPrice" class="text-green">74.20</td>
+            <td data-col-key="highAndLowLimited" class="text-green">+1.23%</td>
+            <td data-col-key="highAndLow" class="text-green">+0.90</td>
+            <td data-col-key="trades">3,120</td>
+            <td data-col-key="volume">2.10M</td>
+            <td data-col-key="bidPrice">74.10</td>
+            <td data-col-key="bidVol" style="display:none;">25000</td>
+            <td data-col-key="askPrice">74.20</td>
+            <td data-col-key="askVol" style="display:none;">19000</td>
+            <td data-col-key="openPrice" style="display:none;">73.40</td>
+            <td data-col-key="highPrice">74.60</td>
+            <td data-col-key="lowPrice">73.20</td>
+            <td data-col-key="turnover" style="display:none;">155.8M</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- VIEW 2: SINGLE STOCK DETAIL (Order Book Depth & Time & Sales) -->
+    <section id="view-stock" class="view-section">
+      <div class="stock-header-card stock-detail">
+        <div>
+          <div style="display:flex; align-items:center; gap: 10px;">
+            <h1 id="current-stock-symbol" class="stock-header-symbol" data-col-key="symbol" style="font-size:26px;">1120</h1>
+            <span id="current-stock-name" class="stock-header-name" style="font-size: 18px; color: var(--sahm-muted);">مصرف الراجحي (السوق السعودي)</span>
+          </div>
+          <div style="display:flex; gap:12px; margin-top:8px; font-size:12px;">
+            <span>الافتتاح: <b data-col-key="openPrice">86.50</b></span>
+            <span>الأعلى: <b data-col-key="highPrice">88.20</b></span>
+            <span>الأدنى: <b data-col-key="lowPrice">86.40</b></span>
+            <span>الحجم: <b data-col-key="volume">4.85M</b></span>
+            <span>الصفقات: <b data-col-key="trades">4,210</b></span>
+          </div>
+        </div>
+        <div style="text-align:left;">
+          <div id="current-stock-price" data-col-key="lastPrice" style="font-size:32px; font-weight:800; color:var(--sahm-emerald);">87.50</div>
+          <div id="current-stock-change" data-col-key="highAndLowLimited" style="font-size:14px; font-weight:800; color:var(--sahm-emerald);">+1.65% (+1.40)</div>
+        </div>
+      </div>
+
+      <!-- Depth & Time and Sales Grid -->
+      <div class="stock-detail-grid">
+        <!-- Order Book Depth (10-level) -->
+        <div class="depth-box order-book">
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <h3 style="font-size:13px; font-weight:800;">عمق سجل الأوامر (Market Depth)</h3>
+            <span style="font-size:11px; color:var(--sahm-emerald); font-weight:700;">نسبة الطلب: 65%</span>
+          </div>
+          <div class="depth-grid">
+            <div>
+              <div style="color:var(--sahm-emerald); font-weight:800; margin-bottom:4px; font-size:11px;">طلبات الشراء (Bids)</div>
+              <table style="width:100%; font-size:11px;">
+                <tbody class="order-book-bids">
+                  <tr><td style="color:var(--sahm-emerald); font-weight:700;">87.40</td><td style="text-align:left;">18,500</td></tr>
+                  <tr><td style="color:var(--sahm-emerald); font-weight:700;">87.30</td><td style="text-align:left;">25,400</td></tr>
+                  <tr><td style="color:var(--sahm-emerald); font-weight:700;">87.20</td><td style="text-align:left;">42,100</td></tr>
+                  <tr><td style="color:var(--sahm-emerald); font-weight:700;">87.10</td><td style="text-align:left;">15,800</td></tr>
+                  <tr><td style="color:var(--sahm-emerald); font-weight:700;">87.00</td><td style="text-align:left;">65,000</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div>
+              <div style="color:var(--sahm-red); font-weight:800; margin-bottom:4px; font-size:11px;">عروض البيع (Asks)</div>
+              <table style="width:100%; font-size:11px;">
+                <tbody class="order-book-asks">
+                  <tr><td style="color:var(--sahm-red); font-weight:700;">87.50</td><td style="text-align:left;">9,200</td></tr>
+                  <tr><td style="color:var(--sahm-red); font-weight:700;">87.60</td><td style="text-align:left;">14,500</td></tr>
+                  <tr><td style="color:var(--sahm-red); font-weight:700;">87.70</td><td style="text-align:left;">18,200</td></tr>
+                  <tr><td style="color:var(--sahm-red); font-weight:700;">87.80</td><td style="text-align:left;">31,000</td></tr>
+                  <tr><td style="color:var(--sahm-red); font-weight:700;">87.90</td><td style="text-align:left;">22,400</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Time and Sales Whale Detector -->
+        <div class="ts-box time-and-sales">
+          <h3 style="font-size:13px; font-weight:800; margin-bottom:8px;">الصفقات اللحظية (Time & Sales)</h3>
+          <table class="trades-table" style="width:100%; font-size:11px;">
+            <thead>
+              <tr style="color:var(--sahm-muted);">
+                <th>الوقت</th>
+                <th>السعر</th>
+                <th>الحجم</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="trade-row green" style="color:var(--sahm-emerald); font-weight:700;">
+                <td>14:28:15</td>
+                <td>87.50</td>
+                <td><b>35,000 🐋</b></td>
+              </tr>
+              <tr class="trade-row green" style="color:var(--sahm-emerald);">
+                <td>14:28:12</td>
+                <td>87.50</td>
+                <td>8,200</td>
+              </tr>
+              <tr class="trade-row green" style="color:var(--sahm-emerald);">
+                <td>14:28:01</td>
+                <td>87.40</td>
+                <td>12,500</td>
+              </tr>
+              <tr class="trade-row red" style="color:var(--sahm-red);">
+                <td>14:27:54</td>
+                <td>87.40</td>
+                <td>4,000</td>
+              </tr>
+              <tr class="trade-row green" style="color:var(--sahm-emerald); font-weight:700;">
+                <td>14:27:30</td>
+                <td>87.40</td>
+                <td><b>50,000 🐋</b></td>
+              </tr>
+              <tr class="trade-row red" style="color:var(--sahm-red);">
+                <td>14:27:10</td>
+                <td>87.30</td>
+                <td>3,500</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Load Saudi Extension Scripts -->
+  <script src="../content/parser_market.js"></script>
+  <script src="../content/parser_stock.js"></script>
+  <script src="../content/sidebar.js"></script>
+  <script src="../content/content.js"></script>
+
+  <script>
+    // Simulator Tab Switcher
+    const tabs = document.querySelectorAll(".nav-tab-btn");
+    const sections = document.querySelectorAll(".view-section");
+
+    tabs.forEach(btn => {
+      btn.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        sections.forEach(s => s.classList.remove("active"));
+
+        btn.classList.add("active");
+        const target = document.getElementById(btn.getAttribute("data-view"));
+        if (target) {
+          target.classList.add("active");
+          if (window.SahmContent) {
+            window.SahmContent.scheduleDebouncedScan();
+          }
+        }
+      });
+    });
+
+    // Market Status Toggle (Open vs Auction vs Closed)
+    let statusState = 0; // 0: Open, 1: Auction, 2: Closed
+    const statusBadge = document.getElementById("sim-status-badge");
+    document.getElementById("sim-toggle-market-status")?.addEventListener("click", () => {
+      statusState = (statusState + 1) % 3;
+      if (statusState === 0) {
+        statusBadge.innerText = "سوق مفتوح 🟢";
+        statusBadge.style.color = "#00F090";
+      } else if (statusState === 1) {
+        statusBadge.innerText = "مزاد الإغلاق 🔮";
+        statusBadge.style.color = "#fbbf24";
+      } else {
+        statusBadge.innerText = "سوق مغلق 🔴";
+        statusBadge.style.color = "#FF3B56";
+      }
+      if (window.SahmContent) window.SahmContent.scheduleDebouncedScan();
+    });
+
+    // Selectable stock row click
+    document.querySelectorAll(".selectable-stock-row").forEach(row => {
+      row.addEventListener("click", () => {
+        const sym = row.getAttribute("data-symbol");
+        const nameEl = row.querySelector(".name");
+        const name = nameEl ? nameEl.innerText : `سهم ${sym}`;
+        const priceEl = row.querySelector('[data-col-key="lastPrice"]');
+        const price = priceEl ? priceEl.innerText : "0.00";
+        const chgEl = row.querySelector('[data-col-key="highAndLowLimited"]');
+        const chg = chgEl ? chgEl.innerText : "0.00%";
+
+        const symEl = document.getElementById("current-stock-symbol");
+        const nameHeader = document.getElementById("current-stock-name");
+        const pEl = document.getElementById("current-stock-price");
+        const cEl = document.getElementById("current-stock-change");
+
+        if (symEl) symEl.innerText = sym;
+        if (nameHeader) nameHeader.innerText = `${name} (السوق السعودي)`;
+        if (pEl) pEl.innerText = price;
+        if (cEl) cEl.innerText = chg;
+
+        document.querySelector("[data-view='view-stock']")?.click();
+      });
+    });
+
+    // Simulation Pump/Dump triggers
+    document.getElementById("sim-btn-pump")?.addEventListener("click", () => {
+      const rajhiPrice = document.querySelector('tr[data-symbol="1120"] [data-col-key="lastPrice"]');
+      const rajhiChg = document.querySelector('tr[data-symbol="1120"] [data-col-key="highAndLowLimited"]');
+      if (rajhiPrice && rajhiChg) {
+        const curr = parseFloat(rajhiPrice.innerText) || 87.50;
+        rajhiPrice.innerText = (curr + 1.20).toFixed(2);
+        rajhiChg.innerText = "+2.95%";
+        if (window.SahmContent) window.SahmContent.scheduleDebouncedScan();
+      }
+    });
+
+    document.getElementById("sim-btn-dump")?.addEventListener("click", () => {
+      const rajhiPrice = document.querySelector('tr[data-symbol="1120"] [data-col-key="lastPrice"]');
+      const rajhiChg = document.querySelector('tr[data-symbol="1120"] [data-col-key="highAndLowLimited"]');
+      if (rajhiPrice && rajhiChg) {
+        const curr = parseFloat(rajhiPrice.innerText) || 87.50;
+        rajhiPrice.innerText = (curr - 2.10).toFixed(2);
+        rajhiChg.innerText = "-1.85%";
+        if (window.SahmContent) window.SahmContent.scheduleDebouncedScan();
+      }
+    });
+  </script>
+</body>
+</html>

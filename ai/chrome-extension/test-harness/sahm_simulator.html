@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منصة سهم للتداول (بيئة محاكاة تفاعلية) | Sahm Platform Simulator</title>
+  <link rel="stylesheet" href="../content/sidebar.css">
+  <style>
+    :root {
+      --sahm-dark: #070a11;
+      --sahm-surface: #0f1624;
+      --sahm-surface-border: #1e293b;
+      --sahm-green: #00F090;
+      --sahm-red: #FF3B56;
+      --sahm-blue: #38bdf8;
+      --sahm-text: #f8fafc;
+      --sahm-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', 'Segoe UI', system-ui, sans-serif;
+    }
+
+    body {
+      background-color: var(--sahm-dark);
+      color: var(--sahm-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navbar */
+    .sahm-nav {
+      background: #0d131f;
+      border-bottom: 1px solid var(--sahm-surface-border);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sahm-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sahm-logo-text {
+      font-size: 19px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #00F090 0%, #06b6d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-tab-btn {
+      background: var(--sahm-surface);
+      border: 1px solid var(--sahm-surface-border);
+      color: var(--sahm-muted);
+      padding: 7px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+
+    .nav-tab-btn:hover {
+      color: var(--sahm-text);
+      border-color: #38bdf8;
+    }
+
+    .nav-tab-btn.active {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: #38bdf8;
+      color: #38bdf8;
+    }
+
+    /* Market Switcher in Header */
+    .header-market-switch {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #070c16;
+      padding: 3px 6px;
+      border-radius: 8px;
+      border: 1px solid var(--sahm-surface-border);
+    }
+
+    .market-switch-btn {
+      background: transparent;
+      border: none;
+      color: var(--sahm-muted);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .market-switch-btn.active {
+      background: #1e293b;
+      color: #38bdf8;
+    }
+
+    /* Top US Indices Ticker Bar */
+    .indices-ticker-bar {
+      background: #090e18;
+      border-bottom: 1px solid var(--sahm-surface-border);
+      padding: 6px 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 12px;
+    }
+
+    .ticker-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Simulation Control Bar */
+    .sim-banner {
+      background: #1e1b4b;
+      border-bottom: 1px solid #3730a3;
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+
+    .sim-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sim-btn {
+      background: #312e81;
+      border: 1px solid #4f46e5;
+      color: #c7d2fe;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11px;
+    }
+    .sim-btn:hover { background: #4338ca; }
+
+    /* Layout Containers */
+    .sahm-container {
+      padding: 20px 24px;
+      flex: 1;
+      max-width: 1350px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .view-section {
+      display: none;
+    }
+    .view-section.active {
+      display: block;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--sahm-surface);
+      border: 1px solid var(--sahm-surface-border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th {
+      background: #0a0f1d;
+      padding: 11px;
+      font-size: 12px;
+      color: var(--sahm-muted);
+      font-weight: 700;
+      text-align: right;
+      border-bottom: 1px solid var(--sahm-surface-border);
+    }
+
+    td {
+      padding: 10px 11px;
+      font-size: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    tbody tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+      cursor: pointer;
+    }
+
+    .text-green { color: var(--sahm-green) !important; font-weight: 700; }
+    .text-red { color: var(--sahm-red) !important; font-weight: 700; }
+
+    /* Single Stock Layout */
+    .stock-detail-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .stock-header-card {
+      background: var(--sahm-surface);
+      border: 1px solid var(--sahm-surface-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .stock-price-huge {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--sahm-green);
+    }
+
+    .depth-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .depth-box, .ts-box {
+      background: var(--sahm-surface);
+      border: 1px solid var(--sahm-surface-border);
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .ts-box {
+      max-height: 480px;
+      overflow-y: auto;
+    }
+
+    .badge-pill {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .cell-with-hover {
+      position: relative;
+    }
+    .cell-with-hover .hover-btn {
+      display: none;
+      position: absolute;
+      left: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 2px 6px;
+      font-size: 10px;
+      font-weight: 700;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    }
+    .cell-with-hover:hover .hover-btn {
+      display: inline-block;
+    }
+    .hover-btn.buy { background: #00F090; color: #000; }
+    .hover-btn.sell { background: #FF3B56; color: #fff; }
+
+    /* Fundamental metrics grid */
+    .fund-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .fund-card {
+      background: #090e18;
+      border: 1px solid var(--sahm-surface-border);
+      border-radius: 8px;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation & Market Switcher Header -->
+  <nav class="sahm-nav">
+    <div class="sahm-brand">
+      <div style="width: 30px; height: 30px; background: #00F090; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 800;">س</div>
+      <div class="sahm-logo-text">منصة سهم | Sahm Trading Web</div>
+    </div>
+
+    <div class="nav-tabs">
+      <button class="nav-tab-btn active" data-view="view-market">قائمة السوق العام (Watchlist)</button>
+      <button class="nav-tab-btn" data-view="view-stock">صفحة السهم المفرد (4D & Order Book)</button>
+      <button class="nav-tab-btn" data-view="view-spx">سلسلة عقود أوبشن SPX</button>
+    </div>
+
+    <!-- Real Sahm Header Market Switcher -->
+    <div class="market-bar-market-info header-market-switch market-switch">
+      <span class="market-name" style="font-size:12px; font-weight:800; color:#38bdf8; margin-left:6px;" id="sim-active-market-name">SA</span>
+      <button id="sim-market-sa" class="market-switch-btn active" data-market="SA">🇸🇦 السوق السعودي (SA)</button>
+      <button id="sim-market-us" class="market-switch-btn" data-market="US">🇺🇸 السوق الأمريكي (US)</button>
+    </div>
+  </nav>
+
+  <!-- Major Indices Ticker Bar -->
+  <div class="indices-ticker-bar ticker-bar">
+    <div class="ticker-item">
+      <span style="color:var(--sahm-muted); font-weight:700;">المؤشر العام (تاسي):</span>
+      <span style="color:#00F090; font-weight:800;">11,845.20 (+0.36%)</span>
+    </div>
+    <div class="ticker-item">
+      <span style="color:var(--sahm-muted); font-weight:700;">SPX إس آند بي 500:</span>
+      <span style="color:#00F090; font-weight:800;">7735.57 (+0.22%)</span>
+    </div>
+    <div class="ticker-item">
+      <span style="color:var(--sahm-muted); font-weight:700;">ناسداك (Nasdaq):</span>
+      <span style="color:#00F090; font-weight:800;">18,485.30 (+0.45%)</span>
+    </div>
+    <div class="ticker-item">
+      <span style="color:var(--sahm-muted); font-weight:700;">داو جونز (Dow Jones):</span>
+      <span style="color:#FF3B56; font-weight:800;">43,210.80 (-0.12%)</span>
+    </div>
+    <div style="margin-right:auto; display:flex; align-items:center; gap:8px;">
+      <span id="sim-status-label" class="market-status" style="font-size:11px; padding:2px 8px; border-radius:4px; background:rgba(0,240,144,0.15); color:#00F090; font-weight:700;">
+        سوق مفتوح
+      </span>
+      <button id="sim-toggle-market-status" class="sim-btn" style="background:#1e293b; border-color:#475569;">تبديل حالة السوق (مفتوح / مغلق)</button>
+    </div>
+  </div>
+
+  <!-- Simulation Control Bar -->
+  <div class="sim-banner">
+    <div>
+      🧪 <b>بيئة اختبار محاكاة لمنصة سهم</b>: تجربة التحليل الرباعي 4D، عقود أوبشن SPX الحقيقية، والتبديل التلقائي بين السوقين.
+    </div>
+    <div class="sim-controls">
+      <button id="sim-btn-pump" class="sim-btn">🔥 محاكاة سيولة شراء (Pump)</button>
+      <button id="sim-btn-dump" class="sim-btn">⚠️ محاكاة سيولة بيع (Dump)</button>
+    </div>
+  </div>
+
+  <main class="sahm-container">
+
+    <!-- VIEW 1: MARKET OVERVIEW TABLE -->
+    <section id="view-market" class="view-section active">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+        <h2 style="font-size: 17px;">جدول مراقبة السوق (Market Overview)</h2>
+        <span style="font-size: 11px; color: var(--sahm-muted);">https://app.sahmcapital.com/market</span>
+      </div>
+
+      <!-- Market Summary Stats Bar -->
+      <div style="display:flex; gap:12px; margin-bottom:14px; background:#111827; border:1px solid #1f293d; border-radius:10px; padding:10px 16px; font-size:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+        <div><b>المؤشر العام (تاسي):</b> <span style="color:#00F090; font-weight:700;">11,845.20 (+42.50 +0.36%)</span></div>
+        <div><b>مؤشر نمو حد أعلى:</b> <span style="color:#00F090; font-weight:700;">26,120.40 (+125.10)</span></div>
+        <div><b>القيمة:</b> <span style="color:#38bdf8; font-weight:700;">5.42 مليار</span></div>
+        <div><b>الحجم:</b> <span style="color:#38bdf8; font-weight:700;">245.8 مليون</span></div>
+        <div><b>الصفقات:</b> <span style="font-weight:700;">385,400</span></div>
+        <div><b>الشركات:</b> <span style="color:#00F090;">138 ارتفاع 🟢</span> | <span style="color:#FF3B56;">74 انخفاض 🔴</span> | <span>22 مستقر</span></div>
+      </div>
+
+      <table class="market-table" id="market-overview-table">
+        <thead>
+          <tr>
+            <th>الرمز</th>
+            <th>اسم الشركة</th>
+            <th>السعر</th>
+            <th>التغير %</th>
+            <th>الحجم</th>
+            <th>القيمة</th>
+            <th>سعر الطلب</th>
+            <th>سعر العرض</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-symbol="1120" class="selectable-stock-row" style="cursor:pointer; background:rgba(56,189,248,0.05);">
+            <td><b>1120</b></td>
+            <td>مصرف الراجحي</td>
+            <td class="text-green">87.50</td>
+            <td class="text-green">+1.65%</td>
+            <td>4.85M</td>
+            <td>424.3M</td>
+            <td>87.40</td>
+            <td>87.50</td>
+          </tr>
+          <tr data-symbol="9587" class="selectable-stock-row" style="cursor:pointer;">
+            <td><b>9587</b></td>
+            <td>لانا الطبية (نمو)</td>
+            <td class="text-green">31.40</td>
+            <td class="text-green">+4.67%</td>
+            <td>1.85M</td>
+            <td>58.1M</td>
+            <td>31.35</td>
+            <td>31.40</td>
+          </tr>
+          <tr data-symbol="2222" class="selectable-stock-row" style="cursor:pointer;">
+            <td><b>2222</b></td>
+            <td>أرامكو السعودية</td>
+            <td class="text-red">27.80</td>
+            <td class="text-red">-0.71%</td>
+            <td>12.4M</td>
+            <td>344.7M</td>
+            <td>27.75</td>
+            <td>27.80</td>
+          </tr>
+          <tr data-symbol="7010" class="selectable-stock-row" style="cursor:pointer;">
+            <td><b>7010</b></td>
+            <td>stc الاتصالات السعودية</td>
+            <td class="text-green">40.85</td>
+            <td class="text-green">+0.25%</td>
+            <td>1.92M</td>
+            <td>78.4M</td>
+            <td>40.80</td>
+            <td>40.85</td>
+          </tr>
+          <tr data-symbol="NVDA" class="selectable-stock-row" style="cursor:pointer;">
+            <td><b>NVDA</b></td>
+            <td>NVIDIA Corp</td>
+            <td class="text-green">138.20</td>
+            <td class="text-green">+3.42%</td>
+            <td>45.8M</td>
+            <td>6.33B</td>
+            <td>138.15</td>
+            <td>138.20</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- VIEW 2: SINGLE STOCK DETAIL (4D + Order Book + News) -->
+    <section id="view-stock" class="view-section">
+      <div class="stock-header-card stock-detail">
+        <div>
+          <div style="display:flex; align-items:center; gap: 10px;">
+            <h1 id="current-stock-symbol" class="stock-header-symbol" style="font-size:26px;">1120</h1>
+            <span id="current-stock-name" class="stock-header-name" style="font-size: 18px; color: var(--sahm-muted);">مصرف الراجحي (السوق السعودي)</span>
+          </div>
+          <div style="font-size: 12px; color: var(--sahm-muted); margin-top: 4px;">
+            أعلى سعر: 88.20 | أدنى سعر: 86.80 | متوسط فواب VWAP: 87.25 | الحجم: 4.85M
+          </div>
+        </div>
+
+        <div style="text-align: left;">
+          <div id="current-stock-price" class="stock-price-huge">87.50</div>
+          <div id="current-stock-change" class="text-green">+1.40 (+1.65%) 🟢</div>
+        </div>
+      </div>
+
+      <!-- Fundamental Metrics Snapshot -->
+      <div class="fund-grid">
+        <div class="fund-card">
+          <div style="font-size:10px; color:var(--sahm-muted);">القيمة السوقية</div>
+          <div style="font-size:14px; font-weight:800; color:#38bdf8; margin-top:2px;">350 مليار ر.س</div>
+        </div>
+        <div class="fund-card">
+          <div style="font-size:10px; color:var(--sahm-muted);">الحجم اليومي</div>
+          <div style="font-size:14px; font-weight:800; color:#f8fafc; margin-top:2px;">4.85M سهم</div>
+        </div>
+        <div class="fund-card">
+          <div style="font-size:10px; color:var(--sahm-muted);">الافتتاح</div>
+          <div style="font-size:14px; font-weight:800; color:#f8fafc; margin-top:2px;">86.80 ر.س</div>
+        </div>
+        <div class="fund-card">
+          <div style="font-size:10px; color:var(--sahm-muted);">نطاق اليوم</div>
+          <div style="font-size:14px; font-weight:800; color:#00F090; margin-top:2px;">86.80 - 88.20</div>
+        </div>
+      </div>
+
+      <div class="stock-detail-grid">
+        <!-- Order Book (Level 2) -->
+        <div class="depth-box order-book" id="order-book-container">
+          <h3 style="font-size: 13px; margin-bottom: 8px; color: var(--sahm-muted);">عمق السوق (Order Book)</h3>
+          <div class="depth-grid">
+            <!-- Bids -->
+            <div>
+              <div style="color: var(--sahm-green); font-weight:700; font-size:11px; margin-bottom: 4px;">طلبات الشراء (Bids)</div>
+              <table class="order-book-bids">
+                <thead><tr><th>السعر</th><th>الكمية</th><th>الصفقات</th></tr></thead>
+                <tbody id="bids-tbody">
+                  <tr class="bid-row"><td>87.40</td><td>15,200</td><td>8</td></tr>
+                  <tr class="bid-row"><td>87.30</td><td>42,500</td><td>19</td></tr>
+                  <tr class="bid-row"><td>87.20</td><td>68,000</td><td>32</td></tr>
+                  <tr class="bid-row"><td>87.10</td><td>31,100</td><td>14</td></tr>
+                  <tr class="bid-row"><td>87.00</td><td>125,000</td><td>55</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Asks -->
+            <div>
+              <div style="color: var(--sahm-red); font-weight:700; font-size:11px; margin-bottom: 4px;">عروض البيع (Asks)</div>
+              <table class="order-book-asks">
+                <thead><tr><th>السعر</th><th>الكمية</th><th>الصفقات</th></tr></thead>
+                <tbody id="asks-tbody">
+                  <tr class="ask-row"><td>87.50</td><td>12,400</td><td>6</td></tr>
+                  <tr class="ask-row"><td>87.60</td><td>28,100</td><td>15</td></tr>
+                  <tr class="ask-row"><td>87.70</td><td>45,000</td><td>21</td></tr>
+                  <tr class="ask-row"><td>87.80</td><td>52,000</td><td>28</td></tr>
+                  <tr class="ask-row"><td>87.90</td><td>78,500</td><td>39</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Time & Sales -->
+        <div class="ts-box time-and-sales" id="time-sales-container">
+          <h3 style="font-size: 13px; margin-bottom: 8px; color: var(--sahm-muted);">الصفقات اللحظية (Time & Sales)</h3>
+          <table class="trades-table">
+            <thead>
+              <tr>
+                <th>الوقت</th>
+                <th>السعر</th>
+                <th>الكمية</th>
+                <th>النوع</th>
+              </tr>
+            </thead>
+            <tbody id="time-sales-tbody">
+              <tr class="trade-row">
+                <td>14:32:15</td>
+                <td class="text-green up buy">87.50</td>
+                <td>2,500</td>
+                <td><span class="badge-pill" style="background:rgba(0,240,144,0.15); color:var(--sahm-green);">شراء</span></td>
+              </tr>
+              <tr class="trade-row">
+                <td>14:32:11</td>
+                <td class="text-green up buy">87.50</td>
+                <td>5,000</td>
+                <td><span class="badge-pill" style="background:rgba(0,240,144,0.15); color:var(--sahm-green);">شراء</span></td>
+              </tr>
+              <tr class="trade-row">
+                <td>14:32:04</td>
+                <td class="text-red down sell">87.40</td>
+                <td>1,200</td>
+                <td><span class="badge-pill" style="background:rgba(255,59,86,0.15); color:var(--sahm-red);">بيع</span></td>
+              </tr>
+              <tr class="trade-row">
+                <td>14:31:58</td>
+                <td class="text-green up buy">87.50</td>
+                <td>10,000</td>
+                <td><span class="badge-pill" style="background:rgba(0,240,144,0.15); color:var(--sahm-green);">شراء</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Scraped News & Announcements Section -->
+      <div style="margin-top:16px; background:var(--sahm-surface); border:1px solid var(--sahm-surface-border); border-radius:10px; padding:14px;" class="news-list" id="stock-news-container">
+        <h3 style="font-size:13px; color:var(--sahm-muted); margin-bottom:10px;">الأخبار والإعلانات المالية للشركة (News Feed)</h3>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div class="news-item" style="padding:8px 12px; background:#090e18; border-radius:6px; border-right:3px solid #00F090;">
+            <div style="font-size:11px; color:#38bdf8;">14:15 | إعلان نتائج الربع السنوي</div>
+            <div style="font-size:12px; font-weight:700; color:#f8fafc; margin-top:2px;">
+              تعلن إدارة المصرف عن نمو صافي أرباح العمليات التشغيلية بنسبة +14.2% للربع الحالي مع التوصية بتوزيع أرباح نقدية مجزية.
+            </div>
+          </div>
+          <div class="news-item" style="padding:8px 12px; background:#090e18; border-radius:6px; border-right:3px solid #64748b;">
+            <div style="font-size:11px; color:#94a3b8;">11:30 | إفصاح مؤسسي</div>
+            <div style="font-size:12px; font-weight:700; color:#f8fafc; margin-top:2px;">
+              إتمام صفقة استثمارية تمويلية جديدة لتمويل مشاريع البنية التحتية ضمن مستهدفات رؤية المملكة 2030.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: SPX OPTIONS CHAIN (Real DOM 7-Column RTL) -->
+    <section id="view-spx" class="view-section">
+      <div class="stock-header-card spx-header" style="margin-bottom: 14px;">
+        <div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <h1 style="font-size:24px; color:#f8fafc;">SPX</h1>
+            <span style="font-size:16px; color: var(--sahm-muted); font-weight:700;">إس آند بي 500 (S&P 500 Index)</span>
+            <span style="font-size:11px; background:rgba(245,158,11,0.15); color:#f59e0b; padding:2px 8px; border-radius:4px; font-weight:700;">• مغلق 15/10-16:00 EDT</span>
+          </div>
+          <div style="font-size:12px; color:var(--sahm-muted); margin-top:5px;">
+            تاريخ الانتهاء: <b id="spx-expiry-date" class="selected-expiration" style="color:#38bdf8;">0DTE (اليوم)</b> | 
+            نوع العقد: <span id="spx-current-type-label" style="color:#f8fafc; font-weight:700;">خيار الشراء (Calls)</span> |
+            <span style="color:#94a3b8;">التداول الليلي</span>
+          </div>
+        </div>
+        <div style="text-align:left;">
+          <div style="font-size:11px; color:var(--sahm-muted); font-weight:700;">سعر المؤشر المرجعي SPX:</div>
+          <div style="display:flex; align-items:baseline; gap:8px;">
+            <div id="spx-underlying-price" class="stock-price-huge underlying-price" style="font-size:32px; color:var(--sahm-green);">7744.06</div>
+            <span class="text-green" style="font-size:13px; font-weight:700;">+0.32% +24.80</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sahm Options Navigation Tabs -->
+      <div class="options-tabs" style="display:flex; gap:8px; margin-bottom: 12px;">
+        <button class="nav-tab-btn spx-type-tab active" data-spx-type="CALL">خيار الشراء (Calls)</button>
+        <button class="nav-tab-btn spx-type-tab" data-spx-type="PUT">خيار البيع (Puts)</button>
+        <button class="nav-tab-btn spx-type-tab" data-spx-type="ALL">الكل</button>
+      </div>
+
+      <!-- Sahm Capital Exact RTL 3-Parallel Naive-UI Options Chain Structure -->
+      <div class="options-chain" id="spx-options-chain" style="display: flex; gap: 6px; overflow-x: auto;">
+        
+        <!-- 1. Calls Table (.calls-content) -->
+        <div class="calls-content" style="flex: 1; min-width: 420px;">
+          <table class="n-data-table-table calls-table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #111827; color: var(--sahm-muted); font-size: 11px;">
+                <th style="padding: 8px 6px; text-align: right;">الطلب (Bid)</th>
+                <th style="padding: 8px 6px; text-align: right;">العرض (Ask)</th>
+                <th style="padding: 8px 6px; text-align: right;">الحجم</th>
+                <th style="padding: 8px 6px; text-align: right;">المراكز</th>
+                <th style="padding: 8px 6px; text-align: right;">IV</th>
+                <th style="padding: 8px 6px; text-align: right;">Delta</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d;">
+                <td data-col-key="bidPrice" class="cell-with-hover"><span class="price-val">30.80</span><button class="hover-btn sell">بيع</button></td>
+                <td data-col-key="askPrice" class="cell-with-hover"><span class="price-val">31.10</span><button class="hover-btn buy">شراء</button></td>
+                <td data-col-key="volume">84</td>
+                <td data-col-key="openInterest">390</td>
+                <td data-col-key="iv">+11.75%</td>
+                <td data-col-key="delta" class="text-green">0.620</td>
+              </tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d;">
+                <td data-col-key="bidPrice" class="cell-with-hover"><span class="price-val">27.30</span><button class="hover-btn sell">بيع</button></td>
+                <td data-col-key="askPrice" class="cell-with-hover"><span class="price-val">27.50</span><button class="hover-btn buy">شراء</button></td>
+                <td data-col-key="volume">37</td>
+                <td data-col-key="openInterest">576</td>
+                <td data-col-key="iv">+11.73%</td>
+                <td data-col-key="delta" class="text-green">0.585</td>
+              </tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d;">
+                <td data-col-key="bidPrice" class="cell-with-hover"><span class="price-val">24.30</span><button class="hover-btn sell">بيع</button></td>
+                <td data-col-key="askPrice" class="cell-with-hover"><span class="price-val">24.60</span><button class="hover-btn buy">شراء</button></td>
+                <td data-col-key="volume">138</td>
+                <td data-col-key="openInterest">490</td>
+                <td data-col-key="iv">+11.70%</td>
+                <td data-col-key="delta" class="text-green">0.542</td>
+              </tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d; background: rgba(0, 240, 144, 0.05);">
+                <td data-col-key="bidPrice" class="cell-with-hover"><span class="price-val">21.40</span><button class="hover-btn sell">بيع</button></td>
+                <td data-col-key="askPrice" class="cell-with-hover"><span class="price-val">21.70</span><button class="hover-btn buy">شراء</button></td>
+                <td data-col-key="volume" style="color:#00F090; font-weight:700;">306</td>
+                <td data-col-key="openInterest">987</td>
+                <td data-col-key="iv">+11.73%</td>
+                <td data-col-key="delta" class="text-green">0.542</td>
+              </tr>
+              <tr class="divider-row" data-spot="true" style="background: rgba(56, 189, 248, 0.08); height: 26px;">
+                <td colspan="6" style="padding: 2px 8px; font-size: 10px; color: #38bdf8;">⚡ سعر المؤشر المرجعي: 7744.06</td>
+              </tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d; background: rgba(56, 189, 248, 0.05);">
+                <td data-col-key="bidPrice" class="cell-with-hover"><span class="price-val">18.80</span><button class="hover-btn sell">بيع</button></td>
+                <td data-col-key="askPrice" class="cell-with-hover"><span class="price-val">19.10</span><button class="hover-btn buy">شراء</button></td>
+                <td data-col-key="volume" style="color:#38bdf8; font-weight:700;">315</td>
+                <td data-col-key="openInterest">459</td>
+                <td data-col-key="iv">+11.66%</td>
+                <td data-col-key="delta" class="text-green">0.500</td>
+              </tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d;">
+                <td data-col-key="bidPrice" class="cell-with-hover"><span class="price-val">16.30</span><button class="hover-btn sell">بيع</button></td>
+                <td data-col-key="askPrice" class="cell-with-hover"><span class="price-val">16.60</span><button class="hover-btn buy">شراء</button></td>
+                <td data-col-key="volume">285</td>
+                <td data-col-key="openInterest">4.46K</td>
+                <td data-col-key="iv">+11.60%</td>
+                <td data-col-key="delta" class="text-green">0.458</td>
+              </tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d;">
+                <td data-col-key="bidPrice" class="cell-with-hover"><span class="price-val">13.90</span><button class="hover-btn sell">بيع</button></td>
+                <td data-col-key="askPrice" class="cell-with-hover"><span class="price-val">14.20</span><button class="hover-btn buy">شراء</button></td>
+                <td data-col-key="volume">215</td>
+                <td data-col-key="openInterest">2.10K</td>
+                <td data-col-key="iv">+11.55%</td>
+                <td data-col-key="delta" class="text-green">0.395</td>
+              </tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d;">
+                <td data-col-key="bidPrice" class="cell-with-hover"><span class="price-val">11.80</span><button class="hover-btn sell">بيع</button></td>
+                <td data-col-key="askPrice" class="cell-with-hover"><span class="price-val">12.10</span><button class="hover-btn buy">شراء</button></td>
+                <td data-col-key="volume">160</td>
+                <td data-col-key="openInterest">1.85K</td>
+                <td data-col-key="iv">+11.50%</td>
+                <td data-col-key="delta" class="text-green">0.340</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 2. Strike Table (.strike-content) -->
+        <div class="strike-content" style="width: 100px; flex-shrink: 0;">
+          <table class="n-data-table-table strike-table" style="width: 100%; border-collapse: collapse; text-align: center;">
+            <thead>
+              <tr style="background: #111827; color: #38bdf8; font-size: 11px;">
+                <th style="padding: 8px 4px; text-align: center;">سعر التنفيذ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d; height: 35px;"><td data-col-key="strikePrice" style="font-weight: 800; color: #38bdf8;">7725</td></tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d; height: 35px;"><td data-col-key="strikePrice" style="font-weight: 800; color: #38bdf8;">7730</td></tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d; height: 35px;"><td data-col-key="strikePrice" style="font-weight: 800; color: #38bdf8;">7735</td></tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d; height: 35px; background: rgba(0, 240, 144, 0.05);"><td data-col-key="strikePrice" style="font-weight: 800; color: #00F090;">7740</td></tr>
+              <tr class="divider-row" data-spot="true" style="background: rgba(56, 189, 248, 0.15); height: 26px;"><td style="font-weight: 800; color: #38bdf8; font-size: 11px;">7744.06</td></tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d; height: 35px; background: rgba(56, 189, 248, 0.05);"><td data-col-key="strikePrice" style="font-weight: 800; color: #38bdf8;">7745</td></tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d; height: 35px;"><td data-col-key="strikePrice" style="font-weight: 800; color: #38bdf8;">7750</td></tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d; height: 35px;"><td data-col-key="strikePrice" style="font-weight: 800; color: #38bdf8;">7755</td></tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d; height: 35px;"><td data-col-key="strikePrice" style="font-weight: 800; color: #38bdf8;">7760</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 3. Puts Table (.puts-content) -->
+        <div class="puts-content" style="flex: 1; min-width: 420px;">
+          <table class="n-data-table-table puts-table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #111827; color: var(--sahm-muted); font-size: 11px;">
+                <th style="padding: 8px 6px; text-align: right;">Delta</th>
+                <th style="padding: 8px 6px; text-align: right;">IV</th>
+                <th style="padding: 8px 6px; text-align: right;">المراكز</th>
+                <th style="padding: 8px 6px; text-align: right;">الحجم</th>
+                <th style="padding: 8px 6px; text-align: right;">العرض (Ask)</th>
+                <th style="padding: 8px 6px; text-align: right;">الطلب (Bid)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d;">
+                <td data-col-key="delta" class="text-red">-0.380</td>
+                <td data-col-key="iv">+11.75%</td>
+                <td data-col-key="openInterest">1.20K</td>
+                <td data-col-key="volume">95</td>
+                <td data-col-key="askPrice" class="cell-with-hover"><span class="price-val">5.30</span><button class="hover-btn buy">شراء</button></td>
+                <td data-col-key="bidPrice" class="cell-with-hover"><span class="price-val">5.00</span><button class="hover-btn sell">بيع</button></td>
+              </tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d;">
+                <td data-col-key="delta" class="text-red">-0.415</td>
+                <td data-col-key="iv">+11.73%</td>
+                <td data-col-key="openInterest">1.85K</td>
+                <td data-col-key="volume">140</td>
+                <td data-col-key="askPrice" class="cell-with-hover"><span class="price-val">7.20</span><button class="hover-btn buy">شراء</button></td>
+                <td data-col-key="bidPrice" class="cell-with-hover"><span class="price-val">6.90</span><button class="hover-btn sell">بيع</button></td>
+              </tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d;">
+                <td data-col-key="delta" class="text-red">-0.458</td>
+                <td data-col-key="iv">+11.70%</td>
+                <td data-col-key="openInterest">2.40K</td>
+                <td data-col-key="volume">210</td>
+                <td data-col-key="askPrice" class="cell-with-hover"><span class="price-val">9.80</span><button class="hover-btn buy">شراء</button></td>
+                <td data-col-key="bidPrice" class="cell-with-hover"><span class="price-val">9.50</span><button class="hover-btn sell">بيع</button></td>
+              </tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d; background: rgba(0, 240, 144, 0.05);">
+                <td data-col-key="delta" class="text-red">-0.500</td>
+                <td data-col-key="iv">+11.73%</td>
+                <td data-col-key="openInterest">3.10K</td>
+                <td data-col-key="volume">350</td>
+                <td data-col-key="askPrice" class="cell-with-hover"><span class="price-val">12.60</span><button class="hover-btn buy">شراء</button></td>
+                <td data-col-key="bidPrice" class="cell-with-hover"><span class="price-val">12.30</span><button class="hover-btn sell">بيع</button></td>
+              </tr>
+              <tr class="divider-row" data-spot="true" style="background: rgba(56, 189, 248, 0.08); height: 26px;">
+                <td colspan="6" style="padding: 2px 8px; font-size: 10px; color: #38bdf8;">⚡ سعر المؤشر المرجعي: 7744.06</td>
+              </tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d; background: rgba(56, 189, 248, 0.05);">
+                <td data-col-key="delta" class="text-red">-0.542</td>
+                <td data-col-key="iv">+11.66%</td>
+                <td data-col-key="openInterest">2.80K</td>
+                <td data-col-key="volume">280</td>
+                <td data-col-key="askPrice" class="cell-with-hover"><span class="price-val">15.90</span><button class="hover-btn buy">شراء</button></td>
+                <td data-col-key="bidPrice" class="cell-with-hover"><span class="price-val">15.60</span><button class="hover-btn sell">بيع</button></td>
+              </tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d;">
+                <td data-col-key="delta" class="text-red">-0.585</td>
+                <td data-col-key="iv">+11.60%</td>
+                <td data-col-key="openInterest">1.95K</td>
+                <td data-col-key="volume">190</td>
+                <td data-col-key="askPrice" class="cell-with-hover"><span class="price-val">19.50</span><button class="hover-btn buy">شراء</button></td>
+                <td data-col-key="bidPrice" class="cell-with-hover"><span class="price-val">19.20</span><button class="hover-btn sell">بيع</button></td>
+              </tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d;">
+                <td data-col-key="delta" class="text-red">-0.620</td>
+                <td data-col-key="iv">+11.55%</td>
+                <td data-col-key="openInterest">1.50K</td>
+                <td data-col-key="volume">120</td>
+                <td data-col-key="askPrice" class="cell-with-hover"><span class="price-val">23.40</span><button class="hover-btn buy">شراء</button></td>
+                <td data-col-key="bidPrice" class="cell-with-hover"><span class="price-val">23.00</span><button class="hover-btn sell">بيع</button></td>
+              </tr>
+              <tr class="strike-row" style="border-bottom: 1px solid #1f293d;">
+                <td data-col-key="delta" class="text-red">-0.660</td>
+                <td data-col-key="iv">+11.50%</td>
+                <td data-col-key="openInterest">980</td>
+                <td data-col-key="volume">80</td>
+                <td data-col-key="askPrice" class="cell-with-hover"><span class="price-val">27.60</span><button class="hover-btn buy">شراء</button></td>
+                <td data-col-key="bidPrice" class="cell-with-hover"><span class="price-val">27.20</span><button class="hover-btn sell">بيع</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <!-- Real Sahm Footer Index Summary -->
+      <div style="margin-top: 12px; background: var(--sahm-surface); border: 1px solid var(--sahm-surface-border); border-radius: 8px; padding: 10px 16px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:12px; color:var(--sahm-muted);">بيانات مؤشر S&P 500 المرجعية:</span>
+        <span style="font-size:14px; font-weight:800;">
+          <span style="color:#00F090;">7735.57</span>
+          <span class="text-green" style="font-size:12px; margin-right:8px;">+0.22% +16.63</span>
+        </span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Load Ext Scripts for direct standalone in-page preview -->
+  <script src="../content/parser_market.js"></script>
+  <script src="../content/parser_stock.js"></script>
+  <script src="../content/parser_spx.js"></script>
+  <script src="../content/sidebar.js"></script>
+  <script src="../content/content.js"></script>
+
+  <script>
+    // Simulator Tab Switcher
+    const tabs = document.querySelectorAll(".nav-tab-btn");
+    const sections = document.querySelectorAll(".view-section");
+
+    tabs.forEach(btn => {
+      btn.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        sections.forEach(s => s.classList.remove("active"));
+
+        btn.classList.add("active");
+        const target = document.getElementById(btn.getAttribute("data-view"));
+        if (target) {
+          target.classList.add("active");
+          if (window.SahmContent) {
+            window.SahmContent.scheduleDebouncedScan();
+          }
+        }
+      });
+    });
+
+    // Market Switcher in header
+    const simMarketSa = document.getElementById("sim-market-sa");
+    const simMarketUs = document.getElementById("sim-market-us");
+
+    simMarketSa.addEventListener("click", () => {
+      simMarketSa.classList.add("active");
+      simMarketUs.classList.remove("active");
+      const badge = document.getElementById("sim-active-market-name");
+      if (badge) badge.innerText = "SA";
+      if (window.SahmSidebar) window.SahmSidebar.setActiveMarket("SA", true);
+    });
+
+    simMarketUs.addEventListener("click", () => {
+      simMarketUs.classList.add("active");
+      simMarketSa.classList.remove("active");
+      const badge = document.getElementById("sim-active-market-name");
+      if (badge) badge.innerText = "US";
+      if (window.SahmSidebar) window.SahmSidebar.setActiveMarket("US", true);
+    });
+
+    // Market Status Toggle (Open vs Closed)
+    let isMarketOpen = true;
+    const statusLabel = document.getElementById("sim-status-label");
+    document.getElementById("sim-toggle-market-status").addEventListener("click", () => {
+      isMarketOpen = !isMarketOpen;
+      if (isMarketOpen) {
+        statusLabel.innerText = "سوق مفتوح";
+        statusLabel.style.background = "rgba(0,240,144,0.15)";
+        statusLabel.style.color = "#00F090";
+        if (window.SahmSidebar) window.SahmSidebar.setMarketStatus("OPEN");
+      } else {
+        statusLabel.innerText = "سوق مغلق (مزاد الإغلاق)";
+        statusLabel.style.background = "rgba(245,158,11,0.2)";
+        statusLabel.style.color = "#f59e0b";
+        if (window.SahmSidebar) window.SahmSidebar.setMarketStatus("CLOSED");
+      }
+    });
+
+    // Stock Row Click Navigation
+    document.querySelectorAll(".selectable-stock-row").forEach(row => {
+      row.addEventListener("click", () => {
+        const sym = row.getAttribute("data-symbol");
+        const name = row.children[1].innerText;
+        const price = row.children[2].innerText;
+        const change = row.children[3].innerText;
+
+        document.getElementById("current-stock-symbol").innerText = sym;
+        document.getElementById("current-stock-name").innerText = name + (sym.length === 4 ? " (السوق السعودي)" : " (السوق الأمريكي)");
+        document.getElementById("current-stock-price").innerText = price;
+        document.getElementById("current-stock-change").innerText = change;
+
+        document.querySelector("[data-view='view-stock']").click();
+      });
+    });
+
+    // SPX Tab Switcher (خيار الشراء vs خيار البيع vs الكل)
+    const spxTypeTabs = document.querySelectorAll(".spx-type-tab");
+    const spxTbody = document.getElementById("spx-chain-tbody");
+    const spxTypeLabel = document.getElementById("spx-current-type-label");
+
+    const callsData = [
+      { strike: "7715", bid: "23.40", ask: "23.80", vol: "26.12K", oi: "1.07K", iv: "+2.13%", delta: "0.850", note: "" },
+      { strike: "7720", bid: "19.50", ask: "19.80", vol: "81.71K", oi: "1.83K", iv: "+2.85%", delta: "0.720", note: "" },
+      { strike: "7725", bid: "15.90", ask: "16.10", vol: "102.48K", oi: "2.45K", iv: "+3.15%", delta: "0.610", note: " (أعلى سيولة)" },
+      { strike: "7730", bid: "12.30", ask: "12.60", vol: "64.30K", oi: "1.20K", iv: "+3.40%", delta: "0.510", note: "" },
+      { strike: "7735", bid: "9.10", ask: "9.35", vol: "75.90K", oi: "1.95K", iv: "+3.64%", delta: "0.420", note: " (ATM)" },
+      { strike: "7740", bid: "6.40", ask: "6.70", vol: "42.15K", oi: "980", iv: "+3.95%", delta: "0.315", note: "" }
+    ];
+
+    const putsData = [
+      { strike: "7715", bid: "2.40", ask: "2.65", vol: "24.10K", oi: "820", iv: "+2.95%", delta: "-0.150", note: "" },
+      { strike: "7720", bid: "4.10", ask: "4.35", vol: "35.20K", oi: "950", iv: "+3.10%", delta: "-0.280", note: "" },
+      { strike: "7725", bid: "5.80", ask: "6.05", vol: "88.40K", oi: "1.90K", iv: "+3.25%", delta: "-0.390", note: "" },
+      { strike: "7730", bid: "7.90", ask: "8.15", vol: "94.10K", oi: "2.10K", iv: "+3.40%", delta: "-0.490", note: "" },
+      { strike: "7735", bid: "10.40", ask: "10.70", vol: "108.50K", oi: "2.55K", iv: "+3.60%", delta: "-0.580", note: " (ATM - أعلى سيولة)" },
+      { strike: "7740", bid: "14.20", ask: "14.50", vol: "61.00K", oi: "1.60K", iv: "+3.85%", delta: "-0.685", note: "" }
+    ];
+
+    function renderSPXRows(items, isPut = false) {
+      if (!spxTbody) return;
+      spxTbody.innerHTML = items.map(item => `
+        <tr class="chain-row" ${item.note.includes('أعلى') ? 'style="background: rgba(0, 240, 144, 0.04);"' : ''}>
+          <td style="font-weight:800; color:${item.note.includes('أعلى') ? '#00F090' : '#38bdf8'};">${item.strike}${item.note}</td>
+          <td class="cell-with-hover"><span class="price-val">${item.bid}</span><button class="hover-btn sell">بيع</button></td>
+          <td class="cell-with-hover"><span class="price-val">${item.ask}</span><button class="hover-btn buy">شراء</button></td>
+          <td style="${item.note.includes('أعلى') ? 'color:#00F090; font-weight:700;' : ''}">${item.vol}</td>
+          <td>${item.oi}</td>
+          <td>${item.iv}</td>
+          <td class="${isPut ? 'text-red' : 'text-green'}">${item.delta}</td>
+        </tr>
+      `).join("");
+    }
+
+    spxTypeTabs.forEach(btn => {
+      btn.addEventListener("click", () => {
+        spxTypeTabs.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const type = btn.getAttribute("data-spx-type");
+
+        if (type === "PUT") {
+          spxTypeLabel.innerText = "خيار البيع (Puts)";
+          renderSPXRows(putsData, true);
+        } else {
+          spxTypeLabel.innerText = "خيار الشراء (Calls)";
+          renderSPXRows(callsData, false);
+        }
+
+        if (window.SahmContent) {
+          window.SahmContent.scheduleDebouncedScan();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

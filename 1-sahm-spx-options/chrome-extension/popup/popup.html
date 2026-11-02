@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إعدادات مساعد سهم الذكي</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="popup-header">
+      <div class="logo-box">سهم</div>
+      <div class="title-box">
+        <h3>مساعد تداول سهم | Copilot</h3>
+        <p class="subtitle">محرك التحليل اللحظي والكمي</p>
+      </div>
+    </header>
+
+    <!-- Connection Status Card -->
+    <div class="status-card" id="connection-card">
+      <div class="status-info">
+        <span class="status-dot" id="popup-status-dot"></span>
+        <span class="status-text" id="popup-status-text">جاري فحص الاتصال...</span>
+      </div>
+      <button id="btn-test-connection" class="btn-refresh" title="إعادة فحص">🔄 فحص</button>
+    </div>
+
+    <!-- Settings Form -->
+    <div class="settings-group">
+      <label class="setting-label" for="input-ws-url">رابط خادم التحليل (WebSocket):</label>
+      <input type="text" id="input-ws-url" class="setting-input" value="ws://localhost:8000/ws" spellcheck="false">
+    </div>
+
+    <div class="settings-group toggle-row">
+      <div>
+        <div class="setting-title">المسح اللحظي التلقائي (DOM Observer)</div>
+        <div class="setting-desc">استخراج الصفقات وعمق السوق تلقائياً عند أي تغير</div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggle-autosync" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="settings-group toggle-row">
+      <div>
+        <div class="setting-title">تنبيه المسار العرضي (ممنوع الدخول)</div>
+        <div class="setting-desc">تنبيه صوتي وبصري عند تحول حركة السوق لمسار عرضي خطر</div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggle-alerts" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="actions-group">
+      <button id="btn-save" class="btn-primary">حفظ الإعدادات</button>
+      <button id="btn-open-simulator" class="btn-secondary">فتح منصة المحاكاة التجريبية</button>
+      <a href="http://localhost:8000/docs" target="_blank" class="link-docs">📘 واجهة برمجة FastAPI (Swagger Docs)</a>
+    </div>
+
+    <footer class="popup-footer">
+      <span>الإصدار 1.0.0 | Manifest V3</span>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

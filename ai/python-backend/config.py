@@ -1,0 +1,38 @@
+"""
+Configuration and settings for Sahm Trading Copilot Python Backend
+"""
+
+import os
+from pydantic import BaseModel
+
+class Settings(BaseModel):
+    # Server network settings
+    HOST: str = "0.0.0.0"
+    PORT: int = 8000
+    DEBUG: bool = True
+
+    # Market Mapping (Saudi Tadawul -> Yahoo Finance ticker format)
+    TADAWUL_SUFFIX: str = ".SR"
+    
+    # Quantitative & Order Flow Thresholds
+    ACCUMULATION_BUY_RATIO_MIN: float = 58.0   # Buy volume > 58% indicates accumulation
+    DISTRIBUTION_SELL_RATIO_MIN: float = 58.0 # Sell volume > 58% indicates distribution
+    SIDEWAYS_CHOP_THRESHOLD: float = 4.0      # Low volatility / flat slope triggers sideways warning
+    
+    # SPX Opening Engine Settings
+    SPX_TICKER: str = "^SPX"
+    SPY_TICKER: str = "SPY"
+    MAX_OPTION_SPREAD: float = 0.80           # Filter out wide spread illiquid contracts
+    MIN_OPTION_VOLUME: int = 500              # Minimum volume for viable 0DTE execution
+
+    # Telegram Notification Settings
+    TELEGRAM_BOT_TOKEN: str = "8916261182:AAFCG4I_5KxJqhO8VCk3ABjblUa81jiZQn4"
+    TELEGRAM_CHAT_ID: str = "6363609406"
+    TELEGRAM_NOTIFICATIONS_ENABLED: bool = True
+
+settings = Settings()
+
+# Module-level convenience exports
+TELEGRAM_BOT_TOKEN = settings.TELEGRAM_BOT_TOKEN
+TELEGRAM_CHAT_ID = settings.TELEGRAM_CHAT_ID
+TELEGRAM_NOTIFICATIONS_ENABLED = settings.TELEGRAM_NOTIFICATIONS_ENABLED

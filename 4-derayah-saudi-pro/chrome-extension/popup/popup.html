@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>مساعد دراية السوق السعودي</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <header class="popup-header">
+      <div class="logo-area">
+        <span class="logo-icon">🇸🇦</span>
+        <div>
+          <h1 class="logo-title">Derayah Saudi Pro</h1>
+          <span class="logo-subtitle">مساعد دراية للأسهم السعودية (تاسي ونمو)</span>
+        </div>
+      </div>
+      <span class="version-tag">Port 8003</span>
+    </header>
+
+    <div class="status-card">
+      <div class="status-indicator">
+        <span id="connection-dot" class="status-dot"></span>
+        <span id="connection-text" class="status-text">جاري الاتصال بالسيرفر...</span>
+      </div>
+      <button id="btn-test-connection" class="btn-refresh" title="إعادة فحص">🔄 فحص</button>
+    </div>
+
+    <div class="settings-group">
+      <label class="setting-label" for="input-ws-url">رابط خادم التحليل (WebSocket):</label>
+      <input type="text" id="input-ws-url" class="setting-input" value="ws://localhost:8003/ws" spellcheck="false">
+    </div>
+
+    <div class="settings-group toggle-row">
+      <div>
+        <div class="setting-title">المسح اللحظي لجدول السوق وصفقات المزاد</div>
+        <div class="setting-desc">استخراج الصفقات وعمق طلبات السوق السعودي تلقائياً</div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggle-autosync" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="actions-group">
+      <button id="btn-save" class="btn-primary">حفظ الإعدادات</button>
+      <a href="http://localhost:8003/docs" target="_blank" class="link-docs">📘 واجهة برمجة FastAPI (Swagger Docs)</a>
+    </div>
+
+    <footer class="popup-footer">
+      <span>الإصدار 1.0.0 | Derayah Saudi Edition</span>
+    </footer>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

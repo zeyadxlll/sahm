@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="sahmGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F090" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="22" fill="#0f172a" stroke="#1e293b" stroke-width="4"/>
+  <path d="M 25 70 L 45 45 L 60 55 L 78 28" fill="none" stroke="url(#sahmGrad)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="65,28 78,28 78,41" fill="none" stroke="url(#sahmGrad)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="25" cy="70" r="4" fill="#00F090" />
+  <circle cx="45" cy="45" r="4" fill="#00F090" />
+  <circle cx="60" cy="55" r="4" fill="#06b6d4" />
+</svg>

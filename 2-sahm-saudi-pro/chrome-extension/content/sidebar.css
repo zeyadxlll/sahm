@@ -1,0 +1,861 @@
+/**
+ * Sahm Saudi Pro - Professional Emerald & Dark Gold Theme (تاسي ونمو)
+ * High-performance glassmorphism UI for Saudi Market Copilot
+ */
+
+:root {
+  --sa-bg-primary: #070d18;
+  --sa-bg-secondary: #0c1526;
+  --sa-bg-card: rgba(15, 26, 46, 0.85);
+  --sa-border: rgba(255, 255, 255, 0.08);
+  --sa-border-emerald: rgba(16, 185, 129, 0.3);
+  --sa-border-gold: rgba(245, 158, 11, 0.3);
+  --sa-emerald: #00F090;
+  --sa-emerald-dark: #059669;
+  --sa-gold: #fbbf24;
+  --sa-gold-dark: #d97706;
+  --sa-red: #FF3B56;
+  --sa-text: #f8fafc;
+  --sa-text-muted: #94a3b8;
+  --sa-text-dim: #64748b;
+  --sa-font: 'Tajawal', 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+#sahm-copilot-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  z-index: 9999999;
+  pointer-events: none;
+  font-family: var(--sa-font);
+  direction: rtl;
+  text-align: right;
+}
+
+#sahm-copilot-sidebar {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 440px;
+  max-width: calc(100vw - 32px);
+  height: calc(100vh - 32px);
+  max-height: 920px;
+  background: linear-gradient(180deg, rgba(8, 14, 26, 0.96) 0%, rgba(5, 9, 18, 0.98) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--sa-border-emerald);
+  border-radius: 14px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.75), 0 0 25px rgba(0, 240, 144, 0.12);
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  overflow: hidden;
+  color: var(--sa-text);
+  box-sizing: border-box;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  transform-origin: top right;
+}
+
+#sahm-copilot-sidebar * {
+  box-sizing: border-box;
+}
+
+/* Header */
+.sa-header {
+  padding: 12px 14px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(245, 158, 11, 0.1) 100%);
+  border-bottom: 1px solid var(--sa-border-emerald);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  cursor: grab;
+  touch-action: none;
+}
+
+.sa-header:active,
+#sahm-copilot-sidebar.dragging .sa-header {
+  cursor: grabbing;
+}
+
+#sahm-copilot-sidebar.dragging {
+  user-select: none;
+  transition: none !important;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.9), 0 0 35px rgba(0, 240, 144, 0.35);
+  opacity: 0.96;
+}
+
+.sa-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sa-logo-icon {
+  font-size: 20px;
+  filter: drop-shadow(0 0 8px rgba(0, 240, 144, 0.5));
+}
+
+.sa-app-title {
+  font-size: 14px;
+  font-weight: 900;
+  color: #f8fafc;
+  letter-spacing: -0.2px;
+}
+
+.sa-app-subtitle {
+  font-size: 10px;
+  color: var(--sa-gold);
+  font-weight: 700;
+}
+
+.sa-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sa-status-badge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sa-status-badge.connected {
+  background: rgba(0, 240, 144, 0.15);
+  color: var(--sa-emerald);
+  border: 1px solid rgba(0, 240, 144, 0.3);
+}
+
+.sa-status-badge.disconnected {
+  background: rgba(255, 59, 86, 0.15);
+  color: var(--sa-red);
+  border: 1px solid rgba(255, 59, 86, 0.3);
+}
+
+.sa-btn-icon {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--sa-border);
+  color: var(--sa-text-muted);
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sa-btn-icon:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+
+#sa-btn-reset-pos {
+  font-size: 13px;
+}
+
+#sa-btn-reset-pos:hover {
+  background: rgba(245, 158, 11, 0.25);
+  color: var(--sa-gold);
+  border-color: var(--sa-border-gold);
+}
+
+/* Nav Tabs */
+.sa-tabs-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: rgba(8, 14, 26, 0.95);
+  border-bottom: 1px solid var(--sa-border);
+  padding: 4px;
+  gap: 4px;
+}
+
+.sa-tab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--sa-text-muted);
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 8px 4px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.sa-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #f8fafc;
+}
+
+.sa-tab-btn.active {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(245, 158, 11, 0.12) 100%);
+  color: var(--sa-emerald);
+  border: 1px solid var(--sa-border-emerald);
+  box-shadow: 0 0 12px rgba(0, 240, 144, 0.15);
+}
+
+.sa-tab-btn.active .sa-tab-icon {
+  filter: drop-shadow(0 0 6px var(--sa-emerald));
+}
+
+/* Body Container */
+.sa-body-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sa-body-content::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sa-body-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sa-body-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+/* Cards */
+.sa-card {
+  background: linear-gradient(145deg, rgba(16, 26, 44, 0.7) 0%, rgba(9, 16, 28, 0.85) 100%);
+  border: 1px solid var(--sa-border);
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.sa-card-emerald {
+  border: 1px solid var(--sa-border-emerald);
+  box-shadow: 0 4px 20px rgba(0, 240, 144, 0.08);
+}
+
+.sa-card-gold {
+  border: 1px solid var(--sa-border-gold);
+  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.08);
+}
+
+/* TASI Summary Header */
+.sa-tasi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sa-index-val {
+  font-size: 22px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+
+.sa-index-chg {
+  font-size: 12px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 5px;
+}
+
+.sa-index-chg.up {
+  background: rgba(0, 240, 144, 0.18);
+  color: var(--sa-emerald);
+}
+
+.sa-index-chg.down {
+  background: rgba(255, 59, 86, 0.18);
+  color: var(--sa-red);
+}
+
+/* Table */
+.sa-scanner-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 4px;
+  font-size: 11px;
+}
+
+.sa-scanner-table th {
+  padding: 6px 8px;
+  color: var(--sa-text-muted);
+  font-weight: 700;
+  border-bottom: 1px solid var(--sa-border);
+  text-align: right;
+  font-size: 10px;
+}
+
+.sa-scanner-table td {
+  padding: 8px 8px;
+  background: rgba(16, 27, 46, 0.6);
+  color: #f8fafc;
+}
+
+.sa-scanner-table tr td:first-child {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.sa-scanner-table tr td:last-child {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+.sa-scanner-table tr:hover td {
+  background: rgba(24, 38, 64, 0.9);
+}
+
+/* Badges */
+.sa-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.sa-badge-breakout {
+  background: rgba(0, 240, 144, 0.18);
+  color: var(--sa-emerald);
+  border: 1px solid rgba(0, 240, 144, 0.35);
+}
+
+.sa-badge-accumulation {
+  background: rgba(16, 185, 129, 0.18);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.sa-badge-gold {
+  background: rgba(245, 158, 11, 0.18);
+  color: var(--sa-gold);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.sa-badge-danger {
+  background: rgba(239, 68, 68, 0.18);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+/* Order Book Meter */
+.sa-flow-bar {
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: rgba(255, 59, 86, 0.6);
+  display: flex;
+  margin: 6px 0;
+}
+
+.sa-flow-buy {
+  background: var(--sa-emerald);
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+/* Buttons */
+.sa-btn {
+  background: linear-gradient(135deg, var(--sa-emerald-dark) 0%, #047857 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.sa-btn:hover {
+  filter: brightness(1.15);
+  box-shadow: 0 0 10px rgba(0, 240, 144, 0.3);
+}
+
+.sa-btn-gold {
+  background: linear-gradient(135deg, var(--sa-gold-dark) 0%, #b45309 100%);
+  color: #fff;
+}
+
+.sa-btn-gold:hover {
+  filter: brightness(1.15);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+}
+
+.sa-btn-danger {
+  background: rgba(239, 68, 68, 0.25);
+  border: 1px solid #ef4444;
+  color: #fca5a5;
+}
+
+.sa-btn-danger:hover {
+  background: rgba(239, 68, 68, 0.4);
+}
+
+/* Lock Status Bar */
+.sa-lock-bar {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(16, 185, 129, 0.08) 100%);
+  border: 1px solid var(--sa-border-gold);
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10.5px;
+  margin-bottom: 8px;
+}
+
+.sa-lock-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--sa-gold);
+  font-weight: 800;
+}
+
+/* Strategy Banner & Details on Every Card */
+.sa-strategy-box {
+  background: rgba(8, 14, 26, 0.65);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 6px;
+  padding: 6px 9px;
+  margin: 6px 0;
+}
+
+.sa-strategy-label {
+  font-size: 10.5px;
+  font-weight: 900;
+  color: var(--sa-gold);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sa-strategy-desc {
+  font-size: 9.5px;
+  color: var(--sa-text-muted);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+.sa-strategy-timeframe {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 9.5px;
+  color: #38bdf8;
+  margin-top: 4px;
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px dashed rgba(56, 189, 248, 0.25);
+  border-radius: 4px;
+  padding: 3px 6px;
+}
+
+.sa-timeframe-val {
+  font-weight: 800;
+  color: #fff;
+}
+
+.sa-strategy-metrics-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 5px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 4px;
+}
+
+.sa-metric-pill {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #cbd5e1;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sa-metric-pill.highlight {
+  background: rgba(0, 240, 144, 0.12);
+  color: var(--sa-emerald);
+  border-color: rgba(0, 240, 144, 0.25);
+}
+
+.sa-metric-pill.gold {
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--sa-gold);
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+/* Recommendation Cards Grid */
+.sa-recs-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.sa-rec-card {
+  background: linear-gradient(180deg, rgba(15, 26, 46, 0.95) 0%, rgba(10, 18, 32, 0.95) 100%);
+  border: 1px solid var(--sa-border-emerald);
+  border-radius: 10px;
+  padding: 10px 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.sa-rec-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--sa-emerald);
+}
+
+/* Footer Diagnostic */
+.sa-footer {
+  padding: 8px 12px;
+  background: rgba(5, 9, 18, 0.98);
+  border-top: 1px solid var(--sa-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 9.5px;
+  color: var(--sa-text-dim);
+}
+
+/* Compact Mode Header Button */
+.sa-btn-header-compact {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid var(--sa-border-emerald);
+  color: var(--sa-emerald);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.sa-btn-header-compact:hover {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: var(--sa-emerald);
+  transform: translateY(-1px);
+}
+
+.sa-btn-header-compact.active {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.35), rgba(217, 119, 6, 0.35));
+  border-color: var(--sa-gold);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(0, 240, 144, 0.4);
+}
+
+.sa-compact-label {
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* Order Book Visual Depth Bars */
+.sa-depth-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding: 3px 6px;
+  font-size: 10.5px;
+  border-radius: 4px;
+  margin-bottom: 2px;
+  overflow: hidden;
+}
+
+.sa-depth-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  opacity: 0.18;
+  pointer-events: none;
+  border-radius: 3px;
+}
+
+.sa-depth-bar.bid {
+  right: 0;
+  background: var(--sa-emerald);
+}
+
+.sa-depth-bar.ask {
+  left: 0;
+  background: var(--sa-red);
+}
+
+.sa-depth-val {
+  position: relative;
+  z-index: 1;
+  font-weight: 800;
+}
+
+/* Whale Trade Item */
+.sa-trade-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 10px;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+}
+
+.sa-trade-item:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.sa-trade-item.whale {
+  background: rgba(245, 158, 11, 0.12);
+  border-right: 3px solid var(--sa-gold);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.15);
+}
+
+/* Institutional Verdict Box */
+.sa-institutional-verdict {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(15, 26, 46, 0.9) 100%);
+  border: 1px solid var(--sa-border-emerald);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-top: 8px;
+}
+
+.sa-institutional-verdict.bearish {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(15, 26, 46, 0.9) 100%);
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+.sa-verdict-title {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: var(--sa-emerald);
+  margin-bottom: 3px;
+}
+
+.sa-institutional-verdict.bearish .sa-verdict-title {
+  color: var(--sa-red);
+}
+
+.sa-verdict-desc {
+  font-size: 9.5px;
+  color: var(--sa-text-muted);
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   Tab 2: Smart Money Order Flow & Day-Trading Institutional Plan Styles
+   ========================================================================== */
+
+/* Fake Pump Trap Warning Banner */
+.sa-fake-trap-banner {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(185, 28, 28, 0.35) 100%);
+  border: 1px solid rgba(239, 68, 68, 0.6);
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  animation: sa-pulse-red 2s infinite ease-in-out;
+}
+
+@keyframes sa-pulse-red {
+  0%, 100% { border-color: rgba(239, 68, 68, 0.6); box-shadow: 0 0 10px rgba(239, 68, 68, 0.3); }
+  50% { border-color: rgba(239, 68, 68, 0.9); box-shadow: 0 0 20px rgba(239, 68, 68, 0.5); }
+}
+
+.sa-fake-trap-title {
+  font-size: 11.5px;
+  font-weight: 900;
+  color: #fca5a5;
+  margin-bottom: 3px;
+}
+
+.sa-fake-trap-desc {
+  font-size: 10px;
+  color: #fecaca;
+  line-height: 1.4;
+}
+
+/* Smart Badges Row */
+.sa-smart-badges-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+/* True Probability Badge */
+.sa-prob-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.sa-prob-badge.high {
+  background: linear-gradient(135deg, rgba(0, 240, 144, 0.2), rgba(16, 185, 129, 0.15));
+  border: 1px solid rgba(0, 240, 144, 0.45);
+  color: var(--sa-emerald);
+  box-shadow: 0 0 10px rgba(0, 240, 144, 0.2);
+}
+
+.sa-prob-badge.normal {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: var(--sa-gold);
+}
+
+.sa-prob-badge.trap {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: var(--sa-red);
+}
+
+/* Specific Smart Money Badges */
+.sa-badge-iceberg {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(14, 165, 233, 0.15));
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  color: #38bdf8;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.25);
+}
+
+.sa-badge-imbalance {
+  background: linear-gradient(135deg, rgba(0, 240, 144, 0.2), rgba(5, 150, 105, 0.2));
+  border: 1px solid rgba(0, 240, 144, 0.4);
+  color: var(--sa-emerald);
+  box-shadow: 0 0 8px rgba(0, 240, 144, 0.2);
+}
+
+.sa-badge-blocks {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: var(--sa-gold);
+}
+
+/* 4-Tier Day-Trading Execution Plan Card */
+.sa-card-trade-plan {
+  background: linear-gradient(180deg, rgba(15, 26, 46, 0.95) 0%, rgba(10, 18, 33, 0.98) 100%);
+  border: 1px solid var(--sa-border-emerald);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 240, 144, 0.08);
+}
+
+.sa-trade-plan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--sa-border);
+  padding-bottom: 6px;
+}
+
+.sa-trade-plan-title {
+  font-size: 11px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.sa-trade-plan-rule {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: var(--sa-red);
+  background: rgba(255, 59, 86, 0.12);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 59, 86, 0.3);
+}
+
+.sa-plan-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.sa-plan-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--sa-border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sa-plan-item.entry {
+  border-color: rgba(56, 189, 248, 0.35);
+  background: rgba(56, 189, 248, 0.05);
+}
+
+.sa-plan-item.tp1 {
+  border-color: rgba(0, 240, 144, 0.35);
+  background: rgba(0, 240, 144, 0.05);
+}
+
+.sa-plan-item.tp2 {
+  border-color: rgba(245, 158, 11, 0.35);
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.sa-plan-item.sl {
+  border-color: rgba(255, 59, 86, 0.35);
+  background: rgba(255, 59, 86, 0.05);
+}
+
+.sa-plan-label {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: var(--sa-text-muted);
+  margin-bottom: 2px;
+}
+
+.sa-plan-item.entry .sa-plan-label { color: #38bdf8; }
+.sa-plan-item.tp1 .sa-plan-label { color: var(--sa-emerald); }
+.sa-plan-item.tp2 .sa-plan-label { color: var(--sa-gold); }
+.sa-plan-item.sl .sa-plan-label { color: var(--sa-red); }
+
+.sa-plan-val {
+  font-size: 13.5px;
+  font-weight: 900;
+  color: #fff;
+}
+
+.sa-plan-sub {
+  font-size: 9px;
+  color: var(--sa-text-dim);
+  margin-top: 2px;
+  font-weight: 600;
+}
+
+
+

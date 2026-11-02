@@ -1,0 +1,90 @@
+{
+  "manifest_version": 3,
+  "name": "Sahm Copilot | مساعد تداول سهم الذكي",
+  "version": "1.0.0",
+  "description": "مساعد تداول لحظي ذكي وقارئ DOM لمنصة سهم (الأسهم السعودية، الأمريكية، وعقود أوبشن SPX) مع تحليل تدفق السيولة ومحرك كمي متقدم.",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://*.sahmcapital.com/*",
+    "https://app.sahmcapital.com/*",
+    "http://*.sahmcapital.com/*",
+    "*://*.sahmcapital.com/*",
+    "*://app.sahmcapital.com/*",
+    "*://*.sahmholding.com/*",
+    "*://trade.sahmholding.com/*",
+    "*://*.sahm.com/*",
+    "*://*.tradingview.com/*",
+    "http://localhost/*",
+    "http://127.0.0.1/*",
+    "file:///*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "icons": {
+    "16": "assets/icon16.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "مساعد سهم الذكي",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.sahmcapital.com/*",
+        "https://app.sahmcapital.com/*",
+        "http://*.sahmcapital.com/*",
+        "*://*.sahmcapital.com/*",
+        "*://app.sahmcapital.com/*",
+        "*://*.sahmholding.com/*",
+        "*://trade.sahmholding.com/*",
+        "*://*.sahm.com/*",
+        "http://localhost/*",
+        "http://127.0.0.1/*",
+        "file:///*"
+      ],
+      "css": [
+        "content/sidebar.css"
+      ],
+      "js": [
+        "content/parser_market.js",
+        "content/parser_stock.js",
+        "content/parser_spx.js",
+        "content/sidebar.js",
+        "content/content.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "*://*.tradingview.com/*"
+      ],
+      "js": [
+        "content/parser_tradingview.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "content/sidebar.css",
+        "assets/*"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
+}

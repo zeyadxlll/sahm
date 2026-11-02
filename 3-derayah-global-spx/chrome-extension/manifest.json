@@ -1,0 +1,72 @@
+{
+  "manifest_version": 3,
+  "name": "Derayah Global SPX | مساعد دراية جلوبل لعقود أوبشن SPX",
+  "version": "1.0.0",
+  "description": "مساعد تداول لحظي ذكي ومحلل كمي لعقود أوبشن SPX عبر منصة دراية جلوبل (Derayah Global) مع تحليل تدفق السيولة والـ 0DTE.",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "*://*.derayah.com/*",
+    "*://*.derayahglobal.com/*",
+    "*://trade.derayah.com/*",
+    "*://*.interactivebrokers.com/*",
+    "http://localhost/*",
+    "http://127.0.0.1/*",
+    "http://localhost:8002/*",
+    "http://127.0.0.1:8002/*",
+    "file:///*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "icons": {
+    "16": "assets/icon16.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "مساعد دراية جلوبل SPX",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.derayah.com/*",
+        "*://*.derayahglobal.com/*",
+        "*://trade.derayah.com/*",
+        "*://*.interactivebrokers.com/*",
+        "http://localhost/*",
+        "http://127.0.0.1/*",
+        "file:///*"
+      ],
+      "css": [
+        "content/sidebar.css"
+      ],
+      "js": [
+        "content/parser_derayah_spx.js",
+        "content/sidebar.js",
+        "content/content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "content/sidebar.css",
+        "assets/*"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
+}

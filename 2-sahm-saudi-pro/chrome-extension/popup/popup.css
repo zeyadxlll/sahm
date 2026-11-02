@@ -1,0 +1,256 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Cairo', 'Segoe UI', system-ui, sans-serif;
+}
+
+body {
+  width: 360px;
+  background-color: #0b0f19;
+  color: #f8fafc;
+  direction: rtl;
+  padding: 16px;
+}
+
+.popup-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #1e293b;
+}
+
+.logo-box {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, #00F090 0%, #06b6d4 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 16px;
+  color: #000;
+  box-shadow: 0 0 15px rgba(0, 240, 144, 0.3);
+}
+
+.title-box h3 {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.status-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #111827;
+  border: 1px solid #1f293d;
+  padding: 10px 14px;
+  border-radius: 8px;
+}
+
+.status-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #64748b;
+}
+
+.status-dot.connected {
+  background: #00F090;
+  box-shadow: 0 0 8px #00F090;
+}
+
+.status-dot.disconnected {
+  background: #FF3B56;
+  box-shadow: 0 0 8px #FF3B56;
+}
+
+.btn-refresh {
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #94a3b8;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-refresh:hover {
+  color: #f8fafc;
+  background: #334155;
+}
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.setting-label {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.setting-input {
+  background: #111827;
+  border: 1px solid #1f293d;
+  color: #f8fafc;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  direction: ltr;
+  text-align: left;
+}
+
+.setting-input:focus {
+  outline: none;
+  border-color: #38bdf8;
+}
+
+.toggle-row {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background: #111827;
+  border: 1px solid #1f293d;
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+.setting-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.setting-desc {
+  font-size: 10px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+/* Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #334155;
+  transition: 0.3s;
+  border-radius: 20px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #00F090;
+}
+
+input:checked + .slider:before {
+  transform: translateX(18px);
+}
+
+.actions-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #00F090 0%, #00c978 100%);
+  color: #000;
+  font-weight: 700;
+  border: none;
+  padding: 9px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: opacity 0.2s;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-secondary {
+  background: #1e293b;
+  color: #38bdf8;
+  font-weight: 600;
+  border: 1px solid #38bdf8;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.2s;
+}
+
+.btn-secondary:hover {
+  background: rgba(56, 189, 248, 0.1);
+}
+
+.link-docs {
+  font-size: 11px;
+  color: #94a3b8;
+  text-decoration: none;
+  text-align: center;
+  padding: 4px;
+}
+
+.link-docs:hover {
+  color: #38bdf8;
+  text-decoration: underline;
+}
+
+.popup-footer {
+  text-align: center;
+  font-size: 10px;
+  color: #475569;
+  border-top: 1px solid #1e293b;
+  padding-top: 8px;
+}
